@@ -154,6 +154,13 @@
     contours(ctx, w, h, cfg.seed, { color: 'rgba(120,160,200,.085)', indexColor: 'rgba(140,178,214,.16)' });
     soundings(ctx, w, h, cfg.seed, 'rgba(150,175,205,.13)');
     if (cfg.rose) rose(ctx, cfg.rose[0], cfg.rose[1], cfg.rose[2], { line: 'rgba(201,162,74,.28)', text: 'rgba(201,162,74,.45)', fill: 'rgba(201,162,74,.20)', fill2: 'rgba(142,162,184,.14)' });
+    if (!cfg.noNeat) neatline(ctx, w, h, { frame: '#0d1a29', tick: 'rgba(230,220,198,.55)', line: 'rgba(230,220,198,.18)' });
+  };
+  window.drawNeat = function (canvas) {
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
     neatline(ctx, w, h, { frame: '#0d1a29', tick: 'rgba(230,220,198,.55)', line: 'rgba(230,220,198,.18)' });
   };
 })();

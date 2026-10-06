@@ -97,41 +97,42 @@ body{background:#02060b;color:var(--sand);font-family:var(--f-body);display:flex
 </svg>
 
 <!-- ============ F00 CAPA ============ -->
-<section class="frame" id="f00" data-seed="11" data-rose="1600,540,250">
-  <canvas class="chart"></canvas><div class="vignette"></div>
+<section class="frame" id="f00" data-seed="11" data-mask="1">
+  <img src="../img/cover-ocean.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+  <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,14,24,.96) 0%,rgba(6,14,24,.88) 30%,rgba(6,14,24,.45) 52%,rgba(6,14,24,0) 70%),linear-gradient(0deg,rgba(6,14,24,.85) 0%,rgba(6,14,24,0) 30%),linear-gradient(180deg,rgba(6,14,24,.55) 0%,rgba(6,14,24,0) 22%)"></div>
+  <canvas class="chart" style="-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 38%,transparent 62%);mask-image:linear-gradient(90deg,#000 0%,#000 38%,transparent 62%)"></canvas>
+  <canvas class="neat" style="position:absolute;inset:0;width:100%;height:100%;z-index:2"></canvas>
   <div class="classif">OSTENSIVO · USO INTERNO · TRIBO OPEN FINANCE</div>
   <div class="coords" style="left:44px;top:34px">23°33′S</div><div class="coords" style="right:44px;top:34px">046°38′W</div>
   <div class="content" style="justify-content:center;padding-left:40px">
     <div class="wp"><b>AAR</b>After Action Review · 3º trimestre 2026</div>
-    <h1 class="title" style="font-size:200px;margin-top:26px;line-height:.86">OPERAÇÃO<br><span class="b">TRIDENTE</span></h1>
+    <h1 class="title" style="font-size:196px;margin-top:26px;line-height:.86;text-shadow:0 8px 40px rgba(0,0,0,.5)">OPERAÇÃO<br><span class="b">TRIDENTE</span></h1>
     <div style="display:flex;align-items:center;gap:22px;margin-top:30px">
       <span style="width:60px;height:3px;background:var(--brass)"></span>
       <span style="font-family:var(--f-head);font-weight:700;font-size:40px;letter-spacing:.08em;text-transform:uppercase">Open Finance · Dados Abertos e Transacionais</span>
     </div>
-    <p style="font-family:var(--f-head);font-weight:500;font-size:30px;color:var(--fog);max-width:1060px;margin-top:22px;line-height:1.3">Trinta minutos para olhar o 3T de frente: o que planejamos, o que aconteceu, por quê e quais ordens levamos para o 4T26.</p>
-    <!-- course line -->
-    <div style="position:relative;width:1180px;margin-top:62px;height:120px">
+    <p style="font-family:var(--f-head);font-weight:500;font-size:30px;color:var(--fog);max-width:900px;margin-top:22px;line-height:1.3">Trinta minutos para olhar o 3T de frente: o que planejamos, o que aconteceu, por quê e quais ordens levamos para o 4T26.</p>
+    <div style="position:relative;width:1000px;margin-top:62px;height:120px">
       <div style="position:absolute;left:0;right:0;top:15px;border-top:3px dashed rgba(201,162,74,.55)"></div>
       <div style="position:relative;display:flex;justify-content:space-between">
         <div class="cw"><i></i><b>WP-01</b><span>Briefing</span><em>00–03</em></div>
         <div class="cw"><i></i><b>WP-02</b><span>O plano</span><em>03–08</em></div>
-        <div class="cw"><i></i><b>WP-03</b><span>O que aconteceu</span><em>08–16</em></div>
+        <div class="cw"><i></i><b>WP-03</b><span>O que<br>aconteceu</span><em>08–16</em></div>
         <div class="cw"><i></i><b>WP-04</b><span>Por quê</span><em>16–22</em></div>
-        <div class="cw"><i></i><b>WP-05</b><span>Ordens 4T26</span><em>22–27</em></div>
+        <div class="cw"><i></i><b>WP-05</b><span>Ordens<br>4T26</span><em>22–27</em></div>
         <div class="cw hon"><i></i><b>WP-06</b><span>Honra</span><em>27–30</em></div>
       </div>
     </div>
     <style>
-      .cw{display:flex;flex-direction:column;gap:4px;width:150px}
+      .cw{display:flex;flex-direction:column;gap:4px;width:130px}
       .cw i{width:32px;height:32px;border-radius:50%;background:#0b1828;border:3px solid var(--brass);display:block;margin-bottom:10px;box-shadow:0 0 0 7px rgba(6,14,24,.9)}
       .cw.hon i{background:var(--brass)}
       .cw b{font-family:var(--f-mono);font-size:14px;letter-spacing:.2em;color:var(--brass)}
-      .cw span{font-family:var(--f-head);font-weight:700;font-size:25px;text-transform:uppercase;letter-spacing:.04em}
+      .cw span{font-family:var(--f-head);font-weight:700;font-size:24px;text-transform:uppercase;letter-spacing:.04em;line-height:1.05}
       .cw em{font-style:normal;font-family:var(--f-mono);font-size:14px;color:var(--steel)}
     </style>
   </div>
-  <svg class="trident" style="position:absolute;left:1528px;top:420px;width:144px;height:240px;z-index:2;filter:drop-shadow(0 0 30px rgba(201,162,74,.35))"><use href="#trident"/></svg>
-  <div style="position:absolute;right:76px;bottom:64px;z-index:2;text-align:right;font-family:var(--f-mono);font-size:14px;letter-spacing:.22em;color:var(--steel);line-height:1.9">TIME BOX <b style="color:var(--sand)">30 MIN</b><br>PRÊMIO <b style="color:var(--brass-hi)">MEDALHA TRIDENTE · R$ 200</b><br><span style="color:var(--fog)">“O ÚNICO DIA FÁCIL FOI ONTEM.”</span></div>
+  <div style="position:absolute;right:76px;bottom:64px;z-index:2;text-align:right;font-family:var(--f-mono);font-size:14px;letter-spacing:.22em;color:var(--steel);line-height:1.9;text-shadow:0 2px 12px rgba(0,0,0,.8)">TIME BOX <b style="color:var(--sand)">30 MIN</b><br>PRÊMIO <b style="color:var(--brass-hi)">MEDALHA TRIDENTE · R$ 200</b><br><span style="color:var(--fog)">“O ÚNICO DIA FÁCIL FOI ONTEM.”</span></div>
 </section>
 
 <!-- ============ F01 BRIEFING ============ -->
@@ -347,7 +348,8 @@ drawAxis();
 document.fonts.ready.then(()=>{
   document.querySelectorAll('.frame').forEach(f=>{
     const rose=f.dataset.rose?f.dataset.rose.split(',').map(Number):null;
-    drawChart(f.querySelector('canvas.chart'),{seed:+f.dataset.seed,rose});
+    drawChart(f.querySelector('canvas.chart'),{seed:+f.dataset.seed,rose,noNeat:!!f.querySelector('canvas.neat')});
+    const n=f.querySelector('canvas.neat'); if(n) drawNeat(n);
   });
   document.body.dataset.ready='1';
 });
