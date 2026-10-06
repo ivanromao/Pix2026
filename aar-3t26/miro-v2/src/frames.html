@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Operação Tridente v2 · frames</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,500&display=swap">
+<style>
+/* Night nautical chart: navy depths, brass instruments, Miro sticky colors as the only bright paint */
+:root{
+  --abyss:#060E18; --navy:#091525; --hull:#0E1F33; --deck:#142A44; --line:#24405E;
+  --steel:#8DA2B9; --fog:#B9C7D6; --sand:#EAE0CB; --brass:#C9A24A; --brass-hi:#E9CB7C; --brass-dim:#7E6630;
+  --go:#4FA77C; --amber:#E3A23B; --signal:#DB4A3A;
+  --st-win:#93D275; --st-fire:#FF9D48; --st-intel:#6CD8FA; --st-honor:#F5D128;
+  --f-stencil:"Saira Stencil One","Barlow Condensed",Impact,sans-serif;
+  --f-head:"Barlow Condensed","Arial Narrow",sans-serif;
+  --f-body:"Barlow","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#02060b;color:var(--sand);font-family:var(--f-body);display:flex;flex-direction:column;gap:30px;padding:30px}
+.frame{width:1920px;height:1080px;position:relative;overflow:hidden;
+  background:
+    radial-gradient(1100px 760px at 82% 12%, rgba(201,162,74,.075), transparent 62%),
+    radial-gradient(1200px 800px at 8% 110%, rgba(40,110,150,.10), transparent 60%),
+    linear-gradient(180deg,#081322 0%,#060E18 100%)}
+.frame canvas.chart{position:absolute;inset:0;width:100%;height:100%}
+.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 55%,rgba(0,0,0,.45) 100%)}
+.content{position:absolute;inset:48px 62px 44px;display:flex;flex-direction:column;z-index:2}
+.classif{position:absolute;top:13px;left:50%;transform:translateX(-50%);z-index:3;background:#0d1a29;padding:0 14px;font-family:var(--f-mono);font-size:10px;letter-spacing:.32em;color:var(--brass);line-height:10px;height:10px;white-space:nowrap}
+.coords{position:absolute;z-index:3;font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;color:rgba(230,220,198,.6);background:#0d1a29;padding:0 6px;line-height:10px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:40px}
+.wp{display:flex;align-items:center;gap:14px;font-family:var(--f-mono);font-size:14px;letter-spacing:.26em;color:var(--steel);text-transform:uppercase}
+.wp b{background:var(--brass);color:var(--abyss);padding:5px 10px;font-weight:600;letter-spacing:.18em}
+.title{font-family:var(--f-stencil);font-weight:400;font-size:98px;line-height:.9;letter-spacing:.01em;margin-top:14px;color:var(--sand)}
+.title .b{color:var(--brass)}
+.question{font-family:var(--f-head);font-weight:600;font-size:31px;color:var(--fog);margin-top:12px;letter-spacing:.01em}
+.question b{color:var(--sand);font-weight:700}
+.clock{text-align:right;font-family:var(--f-mono);display:flex;flex-direction:column;align-items:flex-end;gap:8px;padding-top:4px}
+.clock .win{font-size:40px;font-weight:600;letter-spacing:-.01em;color:var(--sand);font-variant-numeric:tabular-nums}
+.clock .win i{font-style:normal;color:var(--brass);padding:0 6px}
+.clock .dur{display:inline-flex;align-items:center;gap:10px;font-size:14px;letter-spacing:.24em;color:var(--steel);text-transform:uppercase}
+.clock .dur span{border:1px solid var(--brass-dim);color:var(--brass);padding:4px 10px}
+.miro{font-family:var(--f-mono);font-size:13.5px;line-height:1.65;letter-spacing:.06em;color:var(--steel);max-width:430px;text-align:right}
+.miro b{color:var(--brass-hi);font-weight:500}
+.body{flex:1;display:flex;gap:26px;margin-top:30px;min-height:0}
+.zone{position:relative;flex:1;background:linear-gradient(180deg,rgba(14,31,51,.80),rgba(9,21,37,.80));border:1px solid rgba(141,162,185,.24);--c:var(--brass)}
+.zone::before{content:"";position:absolute;inset:-2px;pointer-events:none;background:
+  linear-gradient(var(--c),var(--c)) left top/26px 3px no-repeat,
+  linear-gradient(var(--c),var(--c)) left top/3px 26px no-repeat,
+  linear-gradient(var(--c),var(--c)) right top/26px 3px no-repeat,
+  linear-gradient(var(--c),var(--c)) right top/3px 26px no-repeat,
+  linear-gradient(var(--c),var(--c)) left bottom/26px 3px no-repeat,
+  linear-gradient(var(--c),var(--c)) left bottom/3px 26px no-repeat,
+  linear-gradient(var(--c),var(--c)) right bottom/26px 3px no-repeat,
+  linear-gradient(var(--c),var(--c)) right bottom/3px 26px no-repeat}
+.zh{display:flex;align-items:center;gap:14px;padding:22px 26px 0}
+.chip{width:30px;height:30px;flex:none;box-shadow:0 3px 0 rgba(0,0,0,.35)}
+.zh h3{font-family:var(--f-head);font-weight:800;font-size:38px;letter-spacing:.07em;text-transform:uppercase;line-height:1}
+.zq{padding:10px 26px 0;font-size:20px;color:var(--fog);line-height:1.35;max-width:620px}
+.zp{padding:10px 26px 0;font-family:var(--f-mono);font-size:13px;color:var(--steel);line-height:1.7;letter-spacing:.03em}
+.zp span{color:var(--brass)}
+.ztag{position:absolute;right:20px;bottom:16px;font-family:var(--f-mono);font-size:12px;letter-spacing:.22em;color:rgba(141,162,185,.75)}
+.wm{position:absolute;right:28px;bottom:42px;opacity:.10;color:var(--sand)}
+.route{position:absolute;left:62px;right:62px;bottom:40px;height:40px;z-index:2;display:flex;align-items:center}
+.route .line{position:absolute;left:8px;right:8px;top:12px;border-top:2px dashed rgba(201,162,74,.35)}
+.route .pts{position:relative;display:flex;justify-content:space-between;width:100%}
+.route .pt{display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11px;letter-spacing:.18em;color:var(--steel);width:140px;white-space:nowrap}
+.route .pt i{width:18px;height:18px;border-radius:50%;background:#0b1828;border:2px solid var(--steel);display:block}
+.route .pt.done i{background:var(--steel)}
+.route .pt.on i{background:var(--brass);border-color:var(--brass);box-shadow:0 0 0 6px rgba(201,162,74,.22)}
+.route .pt.on{color:var(--brass-hi)}
+.with-route .content{bottom:104px}
+.trident{color:var(--brass)}
+.mono{font-family:var(--f-mono)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="trident" viewBox="0 0 120 200">
+      <g fill="currentColor">
+        <rect x="56" y="58" width="8" height="136" rx="2"/>
+        <path d="M20 64 Q20 96 60 100 Q100 96 100 64 L92 64 Q92 88 60 91 Q28 88 28 64 Z"/>
+        <polygon points="60,4 70,30 64,26 64,94 56,94 56,26 50,30"/>
+        <polygon points="24,22 32,46 27,43 27,70 21,70 21,43 16,46"/>
+        <polygon points="96,22 104,46 99,43 99,70 93,70 93,43 88,46"/>
+        <rect x="44" y="176" width="32" height="8" rx="2"/>
+      </g>
+    </symbol>
+    <symbol id="i-cross" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="3"><circle cx="50" cy="50" r="40"/><circle cx="50" cy="50" r="22"/><path d="M50 0V34M50 66V100M0 50H34M66 50H100"/></g><circle cx="50" cy="50" r="4" fill="currentColor"/></symbol>
+    <symbol id="i-fire" viewBox="0 0 100 100"><polygon fill="currentColor" points="50,2 58,34 88,14 68,42 98,50 68,58 88,86 58,66 50,98 42,66 12,86 32,58 2,50 32,42 12,14 42,34"/></symbol>
+    <symbol id="i-intel" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="3"><path d="M10 90 A80 80 0 0 1 90 10"/><path d="M28 90 A62 62 0 0 1 90 28"/><path d="M46 90 A44 44 0 0 1 90 46"/><path d="M64 90 A26 26 0 0 1 90 64"/></g><circle cx="90" cy="90" r="6" fill="currentColor"/></symbol>
+    <symbol id="i-anchor" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><circle cx="50" cy="16" r="9"/><path d="M50 25V92M30 40H70M14 62C18 82 34 92 50 92C66 92 82 82 86 62"/></g></symbol>
+    <symbol id="i-star" viewBox="0 0 100 100"><polygon fill="currentColor" points="50,4 61,38 97,38 68,59 79,94 50,73 21,94 32,59 3,38 39,38"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============ F00 CAPA ============ -->
+<section class="frame" id="f00" data-seed="11" data-rose="1600,540,250">
+  <canvas class="chart"></canvas><div class="vignette"></div>
+  <div class="classif">OSTENSIVO · USO INTERNO · TRIBO OPEN FINANCE</div>
+  <div class="coords" style="left:44px;top:34px">23°33′S</div><div class="coords" style="right:44px;top:34px">046°38′W</div>
+  <div class="content" style="justify-content:center;padding-left:40px">
+    <div class="wp"><b>AAR</b>After Action Review · 3º trimestre 2026</div>
+    <h1 class="title" style="font-size:200px;margin-top:26px;line-height:.86">OPERAÇÃO<br><span class="b">TRIDENTE</span></h1>
+    <div style="display:flex;align-items:center;gap:22px;margin-top:30px">
+      <span style="width:60px;height:3px;background:var(--brass)"></span>
+      <span style="font-family:var(--f-head);font-weight:700;font-size:40px;letter-spacing:.08em;text-transform:uppercase">Open Finance · Dados Abertos e Transacionais</span>
+    </div>
+    <p style="font-family:var(--f-head);font-weight:500;font-size:30px;color:var(--fog);max-width:1060px;margin-top:22px;line-height:1.3">Trinta minutos para olhar o 3T de frente: o que planejamos, o que aconteceu, por quê e quais ordens levamos para o 4T26.</p>
+    <!-- course line -->
+    <div style="position:relative;width:1180px;margin-top:62px;height:120px">
+      <div style="position:absolute;left:0;right:0;top:15px;border-top:3px dashed rgba(201,162,74,.55)"></div>
+      <div style="position:relative;display:flex;justify-content:space-between">
+        <div class="cw"><i></i><b>WP-01</b><span>Briefing</span><em>00–03</em></div>
+        <div class="cw"><i></i><b>WP-02</b><span>O plano</span><em>03–08</em></div>
+        <div class="cw"><i></i><b>WP-03</b><span>O que aconteceu</span><em>08–16</em></div>
+        <div class="cw"><i></i><b>WP-04</b><span>Por quê</span><em>16–22</em></div>
+        <div class="cw"><i></i><b>WP-05</b><span>Ordens 4T26</span><em>22–27</em></div>
+        <div class="cw hon"><i></i><b>WP-06</b><span>Honra</span><em>27–30</em></div>
+      </div>
+    </div>
+    <style>
+      .cw{display:flex;flex-direction:column;gap:4px;width:150px}
+      .cw i{width:32px;height:32px;border-radius:50%;background:#0b1828;border:3px solid var(--brass);display:block;margin-bottom:10px;box-shadow:0 0 0 7px rgba(6,14,24,.9)}
+      .cw.hon i{background:var(--brass)}
+      .cw b{font-family:var(--f-mono);font-size:14px;letter-spacing:.2em;color:var(--brass)}
+      .cw span{font-family:var(--f-head);font-weight:700;font-size:25px;text-transform:uppercase;letter-spacing:.04em}
+      .cw em{font-style:normal;font-family:var(--f-mono);font-size:14px;color:var(--steel)}
+    </style>
+  </div>
+  <svg class="trident" style="position:absolute;left:1528px;top:420px;width:144px;height:240px;z-index:2;filter:drop-shadow(0 0 30px rgba(201,162,74,.35))"><use href="#trident"/></svg>
+  <div style="position:absolute;right:76px;bottom:64px;z-index:2;text-align:right;font-family:var(--f-mono);font-size:14px;letter-spacing:.22em;color:var(--steel);line-height:1.9">TIME BOX <b style="color:var(--sand)">30 MIN</b><br>PRÊMIO <b style="color:var(--brass-hi)">MEDALHA TRIDENTE · R$ 200</b><br><span style="color:var(--fog)">“O ÚNICO DIA FÁCIL FOI ONTEM.”</span></div>
+</section>
+
+<!-- ============ F01 BRIEFING ============ -->
+<section class="frame with-route" id="f01" data-seed="23" data-step="1">
+  <canvas class="chart"></canvas><div class="vignette"></div>
+  <div class="classif">OSTENSIVO · USO INTERNO · AAR 3T26</div>
+  <div class="content">
+    <div class="top">
+      <div><div class="wp"><b>WP-01</b>Briefing · regras e prontidão</div><h2 class="title">BRIEFING DE ABERTURA</h2><div class="question">Antes de olhar para trás, todos a bordo e com as mesmas regras.</div></div>
+      <div class="clock"><div class="win">00:00<i>→</i>03:00</div><div class="dur"><span>3 MIN</span>timer no Miro</div><div class="miro"><b>Trazer todos até mim</b> neste frame<br>cada operador pega uma <b>placa de identificação</b></div></div>
+    </div>
+    <div class="body">
+      <div class="zone" style="flex:1.05">
+        <div class="zh"><span class="chip" style="background:var(--brass)"></span><h3>Regras de engajamento</h3></div>
+        <div style="display:flex;flex-direction:column;gap:20px;padding:26px 26px 0">
+          <div class="roe"><b>ROE·1</b><p><strong>Sem patente na sala.</strong> Todo mundo fala, de estágio a liderança.</p></div>
+          <div class="roe"><b>ROE·2</b><p><strong>Fato antes de opinião.</strong> Datas, entregas, números, evidências.</p></div>
+          <div class="roe"><b>ROE·3</b><p><strong>O quê, nunca quem.</strong> Analisamos o sistema, não as pessoas.</p></div>
+          <div class="roe"><b>ROE·4</b><p><strong>O que é dito aqui fica aqui.</strong> As lições saem; os nomes, não.</p></div>
+          <div class="roe"><b>ROE·5</b><p><strong>Time box é ordem.</strong> Timer zerou, avançamos.</p></div>
+        </div>
+        <style>.roe{display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:baseline}.roe b{font-family:var(--f-mono);font-size:16px;color:var(--brass);letter-spacing:.12em}.roe p{font-size:24px;line-height:1.3;color:var(--fog)}.roe strong{color:var(--sand)}</style>
+      </div>
+      <div class="zone" style="flex:.9;--c:var(--steel)">
+        <div class="zh"><span class="chip" style="background:var(--sand)"></span><h3>Placas</h3></div>
+        <div class="zq">Pegue uma placa, escreva seu nome e um callsign. Exemplo: “Ana · VÍBORA”.</div>
+        <div class="ztag">ARMÁRIO DE PLACAS</div>
+      </div>
+      <div class="zone" style="flex:1.25;--c:var(--go)">
+        <div class="zh"><span class="chip" style="background:var(--go)"></span><h3>Prontidão</h3></div>
+        <div class="zq">Arraste sua placa para o nível que descreve como você chega ao fim do 3T.</div>
+        <div style="position:absolute;left:26px;right:26px;top:150px;bottom:26px;display:grid;grid-template-rows:repeat(5,1fr);gap:8px">
+          <div class="lvl" style="--l:var(--go)"><b>5</b><span>Pronto para o próximo salto</span></div>
+          <div class="lvl" style="--l:#86b98f"><b>4</b><span>Firme, com fôlego</span></div>
+          <div class="lvl" style="--l:var(--amber)"><b>3</b><span>Operacional, mas cansado</span></div>
+          <div class="lvl" style="--l:#d98a58"><b>2</b><span>Precisando reabastecer</span></div>
+          <div class="lvl" style="--l:var(--signal)"><b>1</b><span>Pedindo extração</span></div>
+        </div>
+        <style>.lvl{position:relative;border:1px solid rgba(141,162,185,.22);border-left:6px solid var(--l);background:rgba(6,14,24,.45);display:flex;align-items:center;gap:16px;padding-left:16px}.lvl b{font-family:var(--f-stencil);font-weight:400;font-size:44px;color:var(--l);width:34px}.lvl span{font-family:var(--f-head);font-weight:600;font-size:22px;color:var(--fog);text-transform:uppercase;letter-spacing:.05em}</style>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ F02 OBJETIVOS ============ -->
+<section class="frame with-route" id="f02" data-seed="37" data-step="2">
+  <canvas class="chart"></canvas><div class="vignette"></div>
+  <div class="classif">OSTENSIVO · USO INTERNO · AAR 3T26</div>
+  <div class="content">
+    <div class="top">
+      <div><div class="wp"><b>WP-02</b>Pergunta 1 do AAR</div><h2 class="title">OBJETIVOS DA MISSÃO</h2><div class="question"><b>O que estava planejado?</b> Cada objetivo do 3T, um veredito.</div></div>
+      <div class="clock"><div class="win">03:00<i>→</i>08:00</div><div class="dur"><span>5 MIN</span>timer no Miro</div><div class="miro">arraste cada <b>card de objetivo</b><br>para o status real · fato, não opinião</div></div>
+    </div>
+    <!-- timeline lane -->
+    <div class="zone" style="flex:none;height:300px;margin-top:26px;--c:var(--brass)">
+      <div style="position:absolute;left:30px;top:16px;font-family:var(--f-mono);font-size:13px;letter-spacing:.24em;color:var(--brass)">LINHA DO TEMPO · 3T26</div>
+      <div id="axis" style="position:absolute;left:30px;right:30px;bottom:42px;height:2px;background:linear-gradient(90deg,var(--steel),var(--brass))"></div>
+      <div class="mon" style="left:30px">JULHO</div><div class="mon" style="left:calc(30px + (100% - 60px)*.337)">AGOSTO</div><div class="mon" style="left:calc(30px + (100% - 60px)*.674)">SETEMBRO</div>
+      <div id="ticks"></div>
+      <style>.mon{position:absolute;bottom:10px;font-family:var(--f-head);font-weight:800;font-size:20px;letter-spacing:.18em;color:var(--steel)} .tk{position:absolute;bottom:36px;width:2px;height:14px;background:var(--steel)} .tk.s{height:22px;background:var(--brass)} .tkl{position:absolute;bottom:58px;font-family:var(--f-mono);font-size:12px;color:var(--steel);letter-spacing:.1em;transform:translateX(-50%)}</style>
+    </div>
+    <div class="body" style="margin-top:22px">
+      <div class="zone" style="--c:var(--go)"><div class="zh"><span class="chip" style="background:var(--go)"></span><h3 style="color:#8fd1a8">Cumprido</h3></div><div class="zq">Entregue no prazo e com a qualidade combinada.</div><svg class="wm" width="150" height="150"><use href="#i-cross"/></svg><div class="ztag">VERDE</div></div>
+      <div class="zone" style="--c:var(--amber)"><div class="zh"><span class="chip" style="background:var(--amber)"></span><h3 style="color:#f0bf6e">Parcial</h3></div><div class="zq">Entregue com atraso, escopo reduzido ou exceção.</div><svg class="wm" width="150" height="150"><use href="#i-intel"/></svg><div class="ztag">ÂMBAR</div></div>
+      <div class="zone" style="--c:var(--signal)"><div class="zh"><span class="chip" style="background:var(--signal)"></span><h3 style="color:#ec8577">Não cumprido</h3></div><div class="zq">Não saiu. Vai direto para a análise de causa.</div><svg class="wm" width="150" height="150"><use href="#i-fire"/></svg><div class="ztag">VERMELHO</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ F03 RELATO DE CAMPO ============ -->
+<section class="frame with-route" id="f03" data-seed="51" data-step="3">
+  <canvas class="chart"></canvas><div class="vignette"></div>
+  <div class="classif">OSTENSIVO · USO INTERNO · AAR 3T26</div>
+  <div class="content">
+    <div class="top">
+      <div><div class="wp"><b>WP-03</b>Pergunta 2 do AAR</div><h2 class="title">RELATO DE CAMPO</h2><div class="question"><b>O que realmente aconteceu?</b> Uma ideia por post-it, em silêncio.</div></div>
+      <div class="clock"><div class="win">08:00<i>→</i>16:00</div><div class="dur"><span>8 MIN</span>timer no Miro</div><div class="miro"><b>Modo privado</b> · 4 min de escrita silenciosa<br>revelar · <b>agrupar por tema</b> · 4 min</div></div>
+    </div>
+    <div class="body" style="margin-top:26px">
+      <div class="zone" style="--c:var(--st-win)"><div class="zh"><span class="chip" style="background:var(--st-win)"></span><h3>Alvos neutralizados</h3></div><div class="zq">Vitórias e acertos. O que entregamos e merece ser comemorado?</div><svg class="wm" width="170" height="170"><use href="#i-cross"/></svg><div class="ztag">POST-IT VERDE</div></div>
+      <div class="zone" style="--c:var(--st-fire)"><div class="zh"><span class="chip" style="background:var(--st-fire)"></span><h3>Fogo inimigo</h3></div><div class="zq">Erros, bloqueios e baixas. O que nos atingiu ou falhou?</div><svg class="wm" width="170" height="170"><use href="#i-fire"/></svg><div class="ztag">POST-IT LARANJA</div></div>
+      <div class="zone" style="--c:var(--st-intel)"><div class="zh"><span class="chip" style="background:var(--st-intel)"></span><h3>Inteligência coletada</h3></div><div class="zq">Aprendizados. O que sabemos hoje que não sabíamos em julho?</div><svg class="wm" width="170" height="170"><use href="#i-intel"/></svg><div class="ztag">POST-IT AZUL</div></div>
+    </div>
+    <div class="zone" style="flex:none;height:150px;margin-top:20px;--c:var(--st-honor)">
+      <div class="zh"><span class="chip" style="background:var(--st-honor)"></span><h3>Menção honrosa</h3></div>
+      <div class="zq" style="max-width:none">Quem fez a diferença no 3T, e por quê, em uma frase. As menções concorrem à Medalha Tridente.</div>
+      <svg class="wm" width="90" height="90" style="bottom:28px"><use href="#i-star"/></svg>
+      <div class="ztag">POST-IT AMARELO · 1 POR PESSOA</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ F04 ANÁLISE DE CAUSA ============ -->
+<section class="frame with-route" id="f04" data-seed="67" data-step="4">
+  <canvas class="chart"></canvas><div class="vignette"></div>
+  <div class="classif">OSTENSIVO · USO INTERNO · AAR 3T26</div>
+  <div class="content">
+    <div class="top">
+      <div><div class="wp"><b>WP-04</b>Pergunta 3 do AAR</div><h2 class="title">ANÁLISE DE CAUSA</h2><div class="question"><b>Por que aconteceu?</b> Descemos até o fundo do tema mais votado.</div></div>
+      <div class="clock"><div class="win">16:00<i>→</i>22:00</div><div class="dur"><span>6 MIN</span>timer no Miro</div><div class="miro"><b>Votação</b> · 3 votos por pessoa · 2 min<br>tema mais votado desce a <b>sondagem</b> · 4 min</div></div>
+    </div>
+    <div class="body" style="margin-top:26px">
+      <div class="zone" style="--c:var(--go)"><div class="zh"><span class="chip" style="background:var(--go)"></span><h3 style="color:#8fd1a8">Sustentar</h3></div><div class="zq">O que funcionou e precisa virar padrão do time.</div><svg class="wm" width="150" height="150"><use href="#i-anchor"/></svg></div>
+      <div class="zone" style="flex:1.2;--c:var(--amber);background:linear-gradient(180deg,rgba(14,31,51,.85),rgba(4,10,18,.92))">
+        <div class="zh"><span class="chip" style="background:var(--amber)"></span><h3 style="color:#f0bf6e">Sondagem · 5 porquês</h3></div>
+        <div style="position:absolute;left:26px;right:26px;top:96px;bottom:22px;display:flex;flex-direction:column;gap:8px">
+          <div class="dp prob"><b>SUPERFÍCIE</b><span>Problema mais votado</span></div>
+          <div class="dp" style="--o:.12"><b>−10 m</b><span>1 · Por quê?</span></div>
+          <div class="dp" style="--o:.2"><b>−20 m</b><span>2 · Por quê?</span></div>
+          <div class="dp" style="--o:.28"><b>−30 m</b><span>3 · Por quê?</span></div>
+          <div class="dp" style="--o:.36"><b>−40 m</b><span>4 · Por quê?</span></div>
+          <div class="dp root"><b>FUNDO</b><span>5 · Causa raiz</span></div>
+        </div>
+        <style>.dp{flex:1;display:flex;align-items:center;gap:18px;padding:0 18px;border:1px dashed rgba(227,162,59,.45);background:rgba(0,0,0,var(--o,.05))}.dp b{font-family:var(--f-mono);font-size:15px;color:var(--amber);width:104px;letter-spacing:.08em}.dp span{font-family:var(--f-head);font-weight:600;font-size:20px;letter-spacing:.06em;text-transform:uppercase;color:var(--steel)}.dp.prob{border-style:solid;border-color:var(--amber)}.dp.root{border-style:solid;border-color:var(--signal);background:rgba(219,74,58,.08)}.dp.root b{color:var(--signal)}.dp.root span{color:var(--sand)}</style>
+      </div>
+      <div class="zone" style="--c:var(--amber)"><div class="zh"><span class="chip" style="background:var(--amber)"></span><h3 style="color:#f0bf6e">Melhorar</h3></div><div class="zq">O que precisa mudar. Seja específico: processo, ferramenta ou acordo.</div><svg class="wm" width="150" height="150"><use href="#i-intel"/></svg></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ F05 ORDENS 4T26 ============ -->
+<section class="frame with-route" id="f05" data-seed="83" data-step="5">
+  <canvas class="chart"></canvas><div class="vignette"></div>
+  <div class="classif">OSTENSIVO · USO INTERNO · AAR 3T26</div>
+  <div class="content">
+    <div class="top">
+      <div><div class="wp"><b>WP-05</b>Pergunta 4 do AAR</div><h2 class="title">ORDENS PARA O <span class="b">4T26</span></h2><div class="question"><b>O que faremos diferente?</b> No máximo três ordens, cada uma com dono.</div></div>
+      <div class="clock"><div class="win">22:00<i>→</i>27:00</div><div class="dur"><span>5 MIN</span>timer no Miro</div><div class="miro">preencha a <b>tabela de ordens</b><br>sem dono, não é ordem</div></div>
+    </div>
+    <div class="zone" style="flex:1;margin-top:26px;--c:var(--signal)">
+      <div style="position:absolute;left:30px;top:18px;font-family:var(--f-mono);font-size:13px;letter-spacing:.24em;color:#ec8577">ORDEM DE OPERAÇÕES · FORMATO OPORD</div>
+      <div style="position:absolute;left:30px;right:30px;bottom:22px;display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:13px;letter-spacing:.12em;color:var(--steel)">
+        <span>MISSÃO = verbo + objeto</span><span>COMANDO = uma pessoa</span><span>H-HORA = data no 4T26</span><span>SINAL = como saberemos que deu certo</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ F06 MEDALHA ============ -->
+<section class="frame with-route" id="f06" data-seed="97" data-step="6">
+  <canvas class="chart"></canvas><div class="vignette"></div>
+  <div class="classif">OSTENSIVO · USO INTERNO · AAR 3T26</div>
+  <div class="content">
+    <div class="top">
+      <div><div class="wp"><b>WP-06</b>Cerimônia de honra</div><h2 class="title">MEDALHA <span class="b">TRIDENTE</span></h2><div class="question"><b>Quem tornou a missão possível?</b> O time decide.</div></div>
+      <div class="clock"><div class="win">27:00<i>→</i>30:00</div><div class="dur"><span>3 MIN</span>timer no Miro</div><div class="miro"><b>Votação anônima</b> · 1 voto · 90 s<br>não vale votar em si mesmo</div></div>
+    </div>
+    <div class="body" style="margin-top:26px">
+      <div class="zone" style="flex:1.45;--c:var(--st-honor)"><div class="zh"><span class="chip" style="background:var(--st-honor)"></span><h3>Indicados</h3></div><div class="zq">Traga para cá as menções honrosas do Relato de Campo. Uma por indicado; agrupe as repetidas.</div><svg class="wm" width="160" height="160"><use href="#i-star"/></svg></div>
+      <div class="zone" style="flex:1;--c:var(--brass);background:radial-gradient(circle at 50% 36%,rgba(201,162,74,.20),transparent 60%),linear-gradient(180deg,rgba(14,31,51,.9),rgba(6,14,24,.95));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center">
+        <div class="medal"><div class="ring"><svg class="trident" width="96" height="160" style="color:#3b2d0e"><use href="#trident"/></svg></div></div>
+        <div style="font-family:var(--f-mono);font-size:14px;letter-spacing:.34em;color:var(--steel)">PRÊMIO</div>
+        <div style="font-family:var(--f-stencil);font-size:118px;line-height:.95;color:var(--brass-hi)">R$ 200</div>
+        <div style="font-family:var(--f-head);font-weight:700;font-size:28px;letter-spacing:.05em;text-transform:uppercase">Vale-compra · o vencedor<br>escolhe a loja do cupom</div>
+        <div style="font-size:17px;color:var(--steel);max-width:430px">Empate: segundo turno de 60 s só entre os empatados.</div>
+        <style>
+          .medal{width:250px;height:250px;border-radius:50%;padding:14px;background:conic-gradient(from 210deg,#7e6630,#e9cb7c,#a8852f,#f4dc96,#7e6630,#c9a24a,#7e6630);box-shadow:0 0 0 6px rgba(201,162,74,.18),0 0 80px rgba(201,162,74,.35)}
+          .medal .ring{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 38% 30%,#f4dc96,#c9a24a 48%,#8a6d2c 100%);box-shadow:inset 0 0 0 3px rgba(59,45,14,.55),inset 0 -10px 24px rgba(59,45,14,.45)}
+        </style>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px">
+      <div style="font-family:var(--f-head);font-weight:600;font-size:26px;color:var(--fog)">Critério: colocou o time acima de si e tornou a missão possível.</div>
+      <div style="font-family:var(--f-stencil);font-size:48px;color:var(--brass);letter-spacing:.05em">HOOYAH!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ F07 MESA DO FACILITADOR ============ -->
+<section class="frame" id="f07" data-seed="113">
+  <canvas class="chart"></canvas><div class="vignette"></div>
+  <div class="classif">RESERVADO AO FACILITADOR · OCULTE ESTE FRAME</div>
+  <div class="content">
+    <div class="top">
+      <div><div class="wp"><b>HQ</b>Mesa do facilitador</div><h2 class="title" style="font-size:84px">PLANO DE VOO</h2><div class="question">Roteiro, tempos e recursos do Miro em cada fase.</div></div>
+      <div class="clock"><div class="win">30:00</div><div class="dur"><span>6 FASES</span>4 perguntas do AAR</div></div>
+    </div>
+    <div class="zone" style="flex:1;margin-top:24px;--c:var(--brass)">
+      <div class="plan">
+        <div class="ph"><b>WP-01 · 00–03</b><h4>Briefing</h4><p>“Bem-vindos à Operação Tridente. Isto é um After Action Review: franqueza, sem patente e sem culpados. Trinta minutos, e o timer manda.”</p><em>Timer 3:00 · Trazer todos até mim · placas · prontidão</em></div>
+        <div class="ph"><b>WP-02 · 03–08</b><h4>Objetivos da missão</h4><p>“Para cada objetivo do 3T: cumprimos, cumprimos em parte ou não cumprimos? Fato, não opinião. Causa fica para depois.”</p><em>Timer 5:00 · arrastar cards para o status</em></div>
+        <div class="ph"><b>WP-03 · 08–16</b><h4>Relato de campo</h4><p>“Quatro minutos em silêncio. Verde vitória, laranja fogo inimigo, azul aprendizado, amarelo menção honrosa. Uma ideia por post-it.”</p><em>Modo privado 4:00 · revelar · agrupar · ler temas</em></div>
+        <div class="ph"><b>WP-04 · 16–22</b><h4>Análise de causa</h4><p>“Três votos nos temas que mais mudariam nosso jogo. O mais votado desce os cinco porquês até o fundo.”</p><em>Votação 2:00 · sondagem 4:00 · sustentar e melhorar</em></div>
+        <div class="ph"><b>WP-05 · 22–27</b><h4>Ordens 4T26</h4><p>“No máximo três ordens. Verbo, dono, data e sinal de sucesso. Sem dono, não é ordem.”</p><em>Tabela de ordens · copiar para o board da Big Room 4T</em></div>
+        <div class="ph"><b>WP-06 · 27–30</b><h4>Medalha Tridente</h4><p>“Votação anônima, um voto, ninguém vota em si. Quem vencer leva o vale de R$ 200 e escolhe a loja.”</p><em>Votação anônima 1:30 · revelação · HOOYAH</em></div>
+      </div>
+      <style>.plan{position:absolute;inset:26px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:22px}.ph{border-top:3px solid var(--brass-dim);padding-top:14px;display:flex;flex-direction:column;gap:10px}.ph b{font-family:var(--f-mono);font-size:14px;letter-spacing:.2em;color:var(--brass)}.ph h4{font-family:var(--f-head);font-weight:800;font-size:32px;text-transform:uppercase;letter-spacing:.05em}.ph p{font-size:20px;line-height:1.4;color:var(--fog);font-style:italic}.ph em{margin-top:auto;font-style:normal;font-family:var(--f-mono);font-size:13px;color:var(--steel);letter-spacing:.06em}</style>
+    </div>
+  </div>
+</section>
+
+<script src="chart.js"></script>
+<script>
+const ROUTE=[['WP-01','BRIEFING'],['WP-02','O PLANO'],['WP-03','O QUE ACONTECEU'],['WP-04','POR QUÊ'],['WP-05','ORDENS 4T26'],['WP-06','HONRA']];
+document.querySelectorAll('.frame').forEach(f=>{
+  const step=+f.dataset.step||0;
+  if(step){
+    const r=document.createElement('div'); r.className='route';
+    r.innerHTML='<div class="line"></div><div class="pts">'+ROUTE.map((x,i)=>'<div class="pt '+(i+1<step?'done':i+1===step?'on':'')+'"><i></i><span>'+x[0]+' · '+x[1]+'</span></div>').join('')+'</div>';
+    f.appendChild(r);
+  }
+});
+// sprint ticks on the objectives axis (filled from data/axis.json when present)
+window.AXIS = window.AXIS || [];
+function drawAxis(){
+  const host=document.getElementById('ticks'); if(!host) return;
+  host.innerHTML = AXIS.map(t=>{
+    const left='calc(30px + (100% - 60px)*'+t.p+')';
+    return '<div class="tk'+(t.s?' s':'')+'" style="left:'+left+'"></div>'+(t.l?'<div class="tkl" style="left:'+left+'">'+t.l+'</div>':'');
+  }).join('');
+}
+drawAxis();
+document.fonts.ready.then(()=>{
+  document.querySelectorAll('.frame').forEach(f=>{
+    const rose=f.dataset.rose?f.dataset.rose.split(',').map(Number):null;
+    drawChart(f.querySelector('canvas.chart'),{seed:+f.dataset.seed,rose});
+  });
+  document.body.dataset.ready='1';
+});
+</script>
+</body>
+</html>
