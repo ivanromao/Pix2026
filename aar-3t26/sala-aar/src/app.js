@@ -309,19 +309,24 @@ function aplicar(st, ev, porCid) {
 }
 function limparPalavra(w) { return String(w || '').toLowerCase().replace(/[^\p{L}\p{N}-]/gu, '').slice(0, 22); }
 
-async function enviar(d) {
+// os envios de cada navegador saem em fila, um por vez, para chegarem ao servidor na ordem em que foram feitos
+let filaEnvio = Promise.resolve();
+function enviar(d) {
   d.cid = CID; d.u = uid();
   const p = { u: d.u, d };
   PEND.push(p); reconstruir();
-  try {
-    const data = await selar(CHAVE, d);
-    await chamar('POST', '/api/events', { data });
-    puxarJa();
-  } catch (e) {
-    PEND = PEND.filter((x) => x !== p); reconstruir();
-    if (e.status === 401) return sairPorSenha();
-    toast(e.message || 'Não foi possível enviar.');
-  }
+  filaEnvio = filaEnvio.then(async () => {
+    try {
+      const data = await selar(CHAVE, d);
+      await chamar('POST', '/api/events', { data });
+      puxarJa();
+    } catch (e) {
+      PEND = PEND.filter((x) => x !== p); reconstruir();
+      if (e.status === 401) return sairPorSenha();
+      toast(e.message || 'Não foi possível enviar.');
+    }
+  });
+  return filaEnvio;
 }
 
 let puxando = false, repetir = false, timerPuxar = 0, ultHb = 0;

@@ -63,9 +63,16 @@ function pagina() {
   });
 }
 
+// a foto é decodificada uma vez por instância, com laço simples (o plano grátis dá 10 ms de CPU por pedido)
+let CAPA_BIN = null;
 function capa() {
-  const bin = Uint8Array.from(atob(CAPA_B64), (c) => c.charCodeAt(0));
-  return new Response(bin, { headers: { ...SEG, 'content-type': 'image/jpeg', 'cache-control': 'public, max-age=86400' } });
+  if (!CAPA_BIN) {
+    const s = atob(CAPA_B64);
+    const u = new Uint8Array(s.length);
+    for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i);
+    CAPA_BIN = u;
+  }
+  return new Response(CAPA_BIN, { headers: { ...SEG, 'content-type': 'image/jpeg', 'cache-control': 'public, max-age=86400, immutable' } });
 }
 
 async function sha256Hex(texto) {
