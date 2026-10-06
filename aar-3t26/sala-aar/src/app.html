@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>After Act Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Roboto+Condensed:ital,wght@0,400;0,700;1,400;1,700&family=Roboto+Mono:wght@400;500&display=swap">
+<style>/*CSS*/</style>
+</head>
+<body>
+<div class="carta" aria-hidden="true"></div>
+
+<main id="portao">
+  <div class="foto" aria-hidden="true"></div>
+  <div class="cofre">
+    <div class="topo">
+      <div id="cofreSonar"></div>
+      <div>
+        <div class="mono">Acesso restrito  ·  sala cifrada</div>
+        <h1>AFTER ACT<span>REVIEW</span></h1>
+      </div>
+    </div>
+
+    <form id="fEntrar" hidden autocomplete="off">
+      <label class="mono" for="senha">Senha do time</label>
+      <input class="campo" id="senha" type="password" autocomplete="current-password" required>
+      <label class="check"><input type="checkbox" id="souMed"> Sou o mediador</label>
+      <div id="blocoCodigo" hidden>
+        <label class="mono" for="codigo">Código do mediador</label>
+        <input class="campo" id="codigo" type="password" autocomplete="off">
+      </div>
+      <button class="btn largo" id="btnEntrar" type="submit">ENTRAR NA SALA</button>
+      <div class="aviso" id="aviso" role="status"></div>
+      <hr>
+      <button class="link" type="button" data-ir="preparar">Preparar ou recriar a sala (mediador)</button>
+    </form>
+
+    <div id="semSala" hidden>
+      <p>A sala ainda não foi preparada. O mediador precisa carregar o conteúdo e definir as senhas.</p>
+      <button class="btn largo" type="button" data-ir="preparar">PREPARAR A SALA</button>
+    </div>
+
+    <form id="fPreparar" hidden autocomplete="off">
+      <p class="dica" style="margin-top:0">O conteúdo é cifrado aqui no seu navegador antes de ir para o servidor. Guarde as senhas: sem elas, nem você recupera a sala.</p>
+      <label class="arquivo" id="rotArquivo" for="arqConteudo">Escolher o arquivo de conteúdo (.json)</label>
+      <input id="arqConteudo" type="file" accept=".json,application/json" class="sr">
+      <label class="mono" for="pSenha">Senha do time (você passa na hora)</label>
+      <input class="campo" id="pSenha" type="password" autocomplete="new-password" minlength="10">
+      <input class="campo" id="pSenha2" type="password" autocomplete="new-password" placeholder="Repita a senha do time" style="margin-top:8px">
+      <div class="dica">Use pelo menos 10 caracteres. Três palavras soltas com um número funcionam bem.</div>
+      <label class="mono" for="pCodigo">Código do mediador (só seu)</label>
+      <input class="campo" id="pCodigo" type="password" autocomplete="new-password" minlength="8">
+      <input class="campo" id="pCodigo2" type="password" autocomplete="new-password" placeholder="Repita o código do mediador" style="margin-top:8px">
+      <div id="blocoAtual" hidden>
+        <label class="mono" for="pAtual">Código do mediador atual</label>
+        <input class="campo" id="pAtual" type="password" autocomplete="off">
+        <div class="dica">Já existe uma sala. Recriar apaga tudo o que foi escrito nela.</div>
+      </div>
+      <button class="btn largo" id="btnPreparar" type="submit">CIFRAR E CRIAR A SALA</button>
+      <div class="aviso" id="avisoP" role="status"></div>
+      <hr>
+      <button class="link" type="button" data-ir="entrar">Voltar para a entrada</button>
+    </form>
+  </div>
+</main>
+
+<div id="app" hidden>
+  <header id="barra">
+    <a class="marca" href="#topo"><div id="marcaSonar"></div><span>AAR</span></a>
+    <nav class="rota" id="rota" aria-label="Rota da missão"></nav>
+    <div class="relogio" id="relogio" aria-live="off">
+      <svg viewBox="0 0 34 34" aria-hidden="true"><circle class="fundoAnel" cx="17" cy="17" r="14"/><circle class="anel" id="anel" cx="17" cy="17" r="14"/></svg>
+      <span id="relogioTxt">00:00</span>
+    </div>
+    <div class="bordo" id="bordo"><i></i><span id="bordoTxt">conectando</span></div>
+    <label class="seguir"><input type="checkbox" id="seguir" checked> seguir o mediador</label>
+  </header>
+  <div id="conteudo"></div>
+  <aside id="qg" hidden aria-label="Painel do mediador">
+    <header><span>QG DO MEDIADOR</span><span class="mono" style="color:var(--gold2)">recolher</span></header>
+    <div class="corpoQG"></div>
+  </aside>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+<canvas id="faiscas" aria-hidden="true"></canvas>
+<script>/*JS*/</script>
+</body>
+</html>
