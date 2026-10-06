@@ -258,10 +258,13 @@ function aplicar(st, ev, porCid) {
       if (adm && d.r in st.rodadas) { st.rodadas[d.r] = d.estado; if (d.zerar) porCid[d.r].clear(); }
       break;
     case 'pronto': if (d.cid) st.prontidao.set(d.cid, clamp(d.n, 1, 5)); break;
-    case 'fato':
+    case 'fato': {
+      const ex = st.fatos.get(d.id);
+      if (ex && !adm && (ex.semente || ex.cid !== d.cid)) break;
       if (d.t && C.linhaDoTempo.meses.some((m) => m.id === d.mes))
-        st.fatos.set(d.id, { id: d.id, mes: d.mes, cor: ['verde', 'vermelho', 'azul'].includes(d.cor) ? d.cor : 'azul', t: texto(d.t, 280), cid: d.cid, ts: ev.ts });
+        st.fatos.set(d.id, { id: d.id, mes: d.mes, cor: ['verde', 'vermelho', 'azul'].includes(d.cor) ? d.cor : 'azul', t: texto(d.t, 280), cid: ex ? ex.cid : d.cid, ts: ex ? ex.ts : ev.ts, semente: ex?.semente });
       break;
+    }
     case 'apagar':
       for (const mapa of [st.fatos, st.praticas, st.indicados, st.causas]) {
         const it = mapa.get(d.id);
@@ -283,9 +286,19 @@ function aplicar(st, ev, porCid) {
       break;
     }
     case 'porque': if (Number.isInteger(d.i) && d.i >= 0 && d.i < 6) st.porques[d.i] = texto(d.v, 300); break;
-    case 'causa': if (d.t) st.causas.set(d.id, { id: d.id, t: texto(d.t, 140), q: QUADS.includes(d.q) ? d.q : 'ca', cid: d.cid }); break;
+    case 'causa': {
+      const ex = st.causas.get(d.id);
+      if (ex && !adm && (ex.semente || ex.cid !== d.cid)) break;
+      if (d.t) st.causas.set(d.id, { id: d.id, t: texto(d.t, 140), q: QUADS.includes(d.q) ? d.q : (ex ? ex.q : 'ca'), cid: ex ? ex.cid : d.cid, semente: ex?.semente });
+      break;
+    }
     case 'mover': { const c = st.causas.get(d.id); if (c && QUADS.includes(d.q)) c.q = d.q; break; }
-    case 'pratica': if (d.t) st.praticas.set(d.id, { id: d.id, t: texto(d.t, 200), cid: d.cid }); break;
+    case 'pratica': {
+      const ex = st.praticas.get(d.id);
+      if (ex && !adm && ex.cid !== d.cid) break;
+      if (d.t) st.praticas.set(d.id, { id: d.id, t: texto(d.t, 200), cid: ex ? ex.cid : d.cid });
+      break;
+    }
     case 'anterior': if (Number.isInteger(d.i)) st.anteriores[d.i] = texto(d.v, 20); break;
     case 'ordem': if (d.n >= 0 && d.n < 3 && ['acao', 'dono', 'prazo', 'pronto'].includes(d.f)) st.ordens[d.n][d.f] = texto(d.v, 300); break;
     case 'indicar': if (d.nome) st.indicados.set(d.id, { id: d.id, nome: texto(d.nome, 60).trim(), por: texto(d.por, 200).trim(), cid: d.cid }); break;
@@ -340,7 +353,7 @@ async function puxar() {
   if (novos) reconstruir(); else renderBarra();
   if (repetir) { repetir = false; return puxar(); }
   const calmo = ST && (ST.fim || !ST.fase);
-  timerPuxar = setTimeout(puxar, document.hidden ? (calmo ? 60000 : 10000) : (ST && ST.fim ? 20000 : !ST?.fase ? 4000 : 1500));
+  timerPuxar = setTimeout(puxar, document.hidden ? (calmo ? 60000 : 10000) : (ST && ST.fim ? 20000 : !ST?.fase ? 3000 : 1000));
 }
 function puxarJa() { clearTimeout(timerPuxar); puxar(); }
 function sairPorSenha() { limparSessao(); toast('A sala mudou de senha. Entre de novo.'); setTimeout(() => location.reload(), 1500); }
@@ -691,11 +704,41 @@ function clicarCarta(i) {
 }
 function renderCartas() { $$('#cartas .carta3d').forEach((c) => { const i = +c.dataset.i; c.classList.toggle('virada', ST.flips.has(i) || flipsLocais.has(i)); }); }
 
+/* edição do próprio card: o texto vira campo, Enter salva, Esc cancela */
+let EDIT = null;
+const editavel = (it) => SESS.isAdmin || (!it.semente && it.cid === CID);
+const editando = (box) => !!EDIT && document.activeElement?.classList.contains('editando') && box.contains(document.activeElement);
+function campoEdicao(item, max, salvar) {
+  const inp = h('textarea', { class: 'editando', maxlength: String(max), rows: '2', 'aria-label': 'Editar texto' });
+  inp.value = item.t;
+  const fim = (ok) => {
+    if (EDIT !== item.id) return;
+    EDIT = null;
+    const t = inp.value.trim();
+    if (ok && t && t !== item.t) salvar(t); else reconstruir();
+  };
+  inp.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); fim(true); } else if (e.key === 'Escape') { e.preventDefault(); fim(false); } });
+  inp.addEventListener('blur', () => fim(true));
+  inp.addEventListener('pointerdown', (e) => e.stopPropagation());
+  setTimeout(() => { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }, 0);
+  return inp;
+}
+function acoes(editar, apagar) {
+  const parar = (e) => e.stopPropagation();
+  return h('span', { class: 'acoes' },
+    editar ? h('button', { class: 'ed', type: 'button', onpointerdown: parar, onclick: editar }, 'editar') : null,
+    apagar ? h('button', { class: 'x', type: 'button', title: 'Apagar', 'aria-label': 'Apagar', onpointerdown: parar, onclick: apagar }, '\u00d7') : null);
+}
+
 function visivelFato(f) { return !ST.privado || f.semente || f.cid === CID; }
 function cardFato(f, modo) {
+  if (EDIT === f.id && modo !== 'voto') {
+    return h('div', { class: 'fato ' + f.cor, dataset: { id: f.id } }, campoEdicao(f, 280, (t) => enviar({ tipo: 'fato', id: f.id, mes: f.mes, cor: f.cor, t })));
+  }
   const oculto = modo !== 'voto' && !visivelFato(f);
-  const el = h('div', { class: 'fato ' + f.cor + (oculto ? ' oculto' : ''), dataset: { id: f.id } }, oculto ? ' ' : f.t);
-  if (!oculto && (f.cid === CID || SESS.isAdmin) && modo !== 'voto') el.append(h('button', { class: 'x', type: 'button', title: 'Apagar', 'aria-label': 'Apagar', onclick: () => enviar({ tipo: 'apagar', id: f.id }) }, '×'));
+  const meu = !oculto && modo !== 'voto' && editavel(f);
+  const el = h('div', { class: 'fato ' + f.cor + (oculto ? ' oculto' : '') + (meu ? ' meu' : ''), dataset: { id: f.id } }, oculto ? '\u00a0' : f.t);
+  if (meu) el.append(acoes(() => { EDIT = f.id; renderFatos(); }, () => enviar({ tipo: 'apagar', id: f.id })));
   return el;
 }
 function renderFatos() {
@@ -705,7 +748,7 @@ function renderFatos() {
   for (const m of C.linhaDoTempo.meses) {
     const lista = [...ST.fatos.values()].filter((f) => f.mes === m.id);
     const box = $('#fatos-' + m.id);
-    trocarFilhos(box, lista.map((f) => cardFato(f)), (f) => f.dataset.id + (f.classList.contains('oculto') ? 'o' : ''));
+    if (!editando(box)) trocarFilhos(box, lista.map((f) => cardFato(f)), (f) => f.dataset.id + (f.classList.contains('oculto') ? 'o' : ''));
     $('#cont-' + m.id).textContent = lista.length ? lista.length + (lista.length === 1 ? ' fato' : ' fatos') : '';
   }
 }
@@ -770,7 +813,12 @@ function renderCausas() {
   for (const q of QUADS) {
     const quad = $('.quad.' + q);
     const lista = [...ST.causas.values()].filter((c) => c.q === q);
-    const cards = lista.map((c) => h('div', { class: 'causa', dataset: { id: c.id }, style: '--c:' + (q[0] === 'c' ? 'var(--green)' : 'var(--amber)'), onpointerdown: (e) => arrastar(e, c) }, c.t));
+    if (editando(quad)) continue;
+    const cor = '--c:' + (q[0] === 'c' ? 'var(--green)' : 'var(--amber)');
+    const cards = lista.map((c) => EDIT === c.id
+      ? h('div', { class: 'causa', dataset: { id: c.id }, style: cor }, campoEdicao(c, 140, (t) => enviar({ tipo: 'causa', id: c.id, t, q: c.q })))
+      : h('div', { class: 'causa' + (editavel(c) ? ' meu' : ''), dataset: { id: c.id }, style: cor, onpointerdown: (e) => arrastar(e, c) }, h('span', null, c.t),
+          editavel(c) ? acoes(() => { EDIT = c.id; renderCausas(); }, c.semente ? null : () => enviar({ tipo: 'apagar', id: c.id })) : null));
     quad.replaceChildren(quad.firstChild, ...cards);
   }
 }
@@ -806,11 +854,14 @@ function renderPraticas() {
   const lista = [...ST.praticas.values()];
   if (est === 'revelada') lista.sort((a, b) => (ST.votos.praticas.get(b.id) || 0) - (ST.votos.praticas.get(a.id) || 0));
   const box = $('#praticas');
-  if (!lista.length) box.replaceChildren(h('p', { class: 'vazio' }, 'As práticas do time aparecem aqui.'));
+  if (editando(box)) { /* não mexe na lista enquanto alguém edita aqui */ }
+  else if (!lista.length) box.replaceChildren(h('p', { class: 'vazio' }, 'As práticas do time aparecem aqui.'));
   else box.replaceChildren(...lista.map((p) => {
     const meu = ST.meus.praticas.get(p.id) || 0, tot = ST.votos.praticas.get(p.id) || 0;
-    return h('div', { class: 'cardLivre' }, p.t,
-      (p.cid === CID || SESS.isAdmin) && est !== 'revelada' ? h('button', { class: 'x', type: 'button', 'aria-label': 'Apagar', onclick: () => enviar({ tipo: 'apagar', id: p.id }) }, '×') : null,
+    if (EDIT === p.id) return h('div', { class: 'cardLivre' }, campoEdicao(p, 200, (t) => enviar({ tipo: 'pratica', id: p.id, t })));
+    const dono = editavel(p) && est !== 'revelada';
+    return h('div', { class: 'cardLivre' + (dono ? ' meu' : '') }, p.t,
+      dono ? acoes(() => { EDIT = p.id; renderPraticas(); }, () => enviar({ tipo: 'apagar', id: p.id })) : null,
       h('div', { class: 'votos' },
         est === 'aberta' ? h('button', { type: 'button', class: meu ? 'on' : null, disabled: (!meu && restam <= 0) || null, onclick: () => enviar({ tipo: 'voto', r: 'praticas', alvo: p.id, v: meu ? -1 : 1 }) }, meu ? 'Votado' : 'Votar') : null,
         mostra && tot ? h('span', { class: 'total' }, tot + (tot === 1 ? ' voto' : ' votos')) : null));

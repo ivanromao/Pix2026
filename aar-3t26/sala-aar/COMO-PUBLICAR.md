@@ -1,6 +1,6 @@
 # Sala do AAR no Cloudflare: como publicar
 
-A sala é uma página com senha, hospedada de graça no Cloudflare. Os devs entram pelo navegador, sem conta em lugar nenhum.
+A sala é um site com senha, hospedado de graça no Cloudflare, com banco de dados. Os devs entram pelo navegador, sem conta em lugar nenhum. O que cada pessoa escreve, edita, vota ou arrasta aparece na tela de todos em cerca de 1 segundo.
 
 Tudo o que aparece na sala é cifrado no seu navegador antes de sair da sua máquina:
 - o conteúdo do 3T;
@@ -87,7 +87,7 @@ Guarde as duas senhas. Elas não ficam salvas em lugar nenhum. Se esquecer o có
 
 ## Limites do plano grátis
 
-O plano grátis do Cloudflare dá 100 mil acessos por dia. Uma cerimônia de 35 minutos com 15 pessoas usa em torno de 25 mil.
+O plano grátis do Cloudflare dá 100 mil acessos por dia. A sala sincroniza a cada segundo durante a cerimônia: 35 minutos com 15 pessoas usam em torno de 40 mil. Fora da cerimônia, ou com a aba em segundo plano, ela consulta bem menos.
 
 A cota zera todo dia às 21h de Brasília. Evite fazer um ensaio pesado no mesmo dia da cerimônia.
 

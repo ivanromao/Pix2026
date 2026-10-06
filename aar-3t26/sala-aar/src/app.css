@@ -471,3 +471,13 @@ footer{width:min(var(--wrap),100%);margin:40px auto 0;padding:30px 32px 60px;col
 .anterior .mono{color:var(--steel);font-size:11.5px}
 .anterior .estado{grid-column:1/-1;justify-self:start}
 .estado button{padding:6px 14px;font-size:12.5px}
+
+.acoes{position:absolute;right:6px;top:5px;display:flex;align-items:center;gap:2px}
+.acoes .ed{border:0;background:none;color:#5b6b88;font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:3px 6px;border-radius:6px;cursor:pointer}
+.acoes .ed:hover{background:#e3e9f5;color:#0b2a7a}
+.acoes .x{position:static;border:0;background:none;color:#7b8aa5;font-size:16px;line-height:1;padding:2px 4px;cursor:pointer}
+.fato.meu,.cardLivre.meu{padding-right:84px}
+.causa{position:relative}
+.causa.meu{padding-right:78px}
+.causa .acoes{top:50%;transform:translateY(-50%)}
+textarea.editando{width:100%;border:1px solid var(--francia);border-radius:8px;padding:6px 8px;font:inherit;font-size:14.5px;line-height:1.35;color:#13203a;background:#fff;resize:vertical;outline:none;box-shadow:0 0 0 3px rgba(34,128,236,.2)}
