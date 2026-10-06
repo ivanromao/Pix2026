@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Operação Tridente · frames Miro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Ops room at night: navy hull, brass insignia, signal colors only for status */
+:root{
+  --abyss:#0A1420; --hull:#102033; --deck:#16293F; --line:#2A425E;
+  --steel:#8EA2B8; --sand:#E6DCC6; --brass:#C9A24A; --brass-dim:#8A7034;
+  --go:#5FA37A; --amber:#E0A43A; --signal:#D9483B;
+  --f-stencil:"Saira Stencil One","Barlow Condensed",Impact,sans-serif;
+  --f-head:"Barlow Condensed","Arial Narrow",sans-serif;
+  --f-body:"Barlow","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05090f;font-family:var(--f-body);color:var(--sand);display:flex;flex-direction:column;gap:40px;padding:40px}
+.frame{width:1920px;height:1080px;position:relative;overflow:hidden;background:
+  radial-gradient(1200px 700px at 78% 18%, rgba(201,162,74,.07), transparent 60%),
+  radial-gradient(900px 600px at 10% 100%, rgba(95,163,122,.05), transparent 60%),
+  var(--abyss)}
+/* grid + topo */
+.frame::before{content:"";position:absolute;inset:0;background-image:
+  linear-gradient(rgba(142,162,184,.06) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(142,162,184,.06) 1px,transparent 1px);
+  background-size:60px 60px;pointer-events:none}
+.frame::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;background:
+  repeating-radial-gradient(circle at 85% 80%, transparent 0 38px, rgba(201,162,74,.07) 38px 39px),
+  repeating-radial-gradient(circle at 12% 15%, transparent 0 46px, rgba(142,162,184,.05) 46px 47px)}
+.inner{position:absolute;inset:0;padding:64px 80px 56px;display:flex;flex-direction:column;z-index:1}
+.class-bar{position:absolute;left:0;right:0;top:0;height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 80px;
+  font-family:var(--f-mono);font-size:13px;letter-spacing:.22em;color:var(--abyss);background:var(--brass);z-index:2}
+.class-bar.bottom{top:auto;bottom:0}
+.corner{position:absolute;width:44px;height:44px;border-color:var(--brass);border-style:solid;z-index:2}
+.c-tl{left:28px;top:52px;border-width:3px 0 0 3px}.c-tr{right:28px;top:52px;border-width:3px 3px 0 0}
+.c-bl{left:28px;bottom:52px;border-width:0 0 3px 3px}.c-br{right:28px;bottom:52px;border-width:0 3px 3px 0}
+.hdr{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;margin-top:10px}
+.eyebrow{font-family:var(--f-mono);font-size:18px;letter-spacing:.3em;color:var(--brass);text-transform:uppercase}
+h1{font-family:var(--f-stencil);font-weight:400;font-size:84px;line-height:.95;letter-spacing:.02em;color:var(--sand)}
+h2{font-family:var(--f-head);font-weight:800;font-size:34px;letter-spacing:.08em;text-transform:uppercase}
+.q{font-family:var(--f-head);font-size:30px;font-weight:600;color:var(--steel);letter-spacing:.03em}
+.q b{color:var(--sand)}
+.meta{font-family:var(--f-mono);font-size:16px;color:var(--steel);text-align:right;line-height:1.7;white-space:nowrap}
+.meta b{color:var(--brass);font-weight:600}
+.phase-tag{display:inline-flex;align-items:center;gap:12px;font-family:var(--f-mono);font-size:16px;letter-spacing:.2em;color:var(--abyss);background:var(--sand);padding:6px 14px}
+.zone{position:relative;border:2px dashed rgba(142,162,184,.35);background:rgba(16,32,51,.55)}
+.zone .zl{position:absolute;left:0;top:0;display:flex;align-items:center;gap:12px;padding:14px 20px;font-family:var(--f-head);font-weight:800;font-size:30px;letter-spacing:.08em;text-transform:uppercase}
+.zone .zs{position:absolute;left:20px;top:58px;right:20px;font-size:19px;color:var(--steel);line-height:1.35}
+.zone .zh{position:absolute;right:16px;bottom:12px;font-family:var(--f-mono);font-size:14px;color:var(--steel);opacity:.8;letter-spacing:.12em}
+.dot{width:16px;height:16px;border-radius:50%}
+.stripe{position:absolute;left:0;top:0;bottom:0;width:8px}
+.go{color:var(--go)} .amber{color:var(--amber)} .signal{color:var(--signal)} .brass{color:var(--brass)}
+.bg-go{background:var(--go)} .bg-amber{background:var(--amber)} .bg-signal{background:var(--signal)} .bg-brass{background:var(--brass)} .bg-steel{background:var(--steel)}
+.foot{position:absolute;left:80px;right:80px;bottom:44px;display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:14px;letter-spacing:.18em;color:var(--steel);z-index:2}
+.trident{color:var(--brass)}
+</style>
+</head>
+<body>
+
+<!-- reusable insignia -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="trident" viewBox="0 0 120 200">
+      <g fill="currentColor">
+        <rect x="56" y="58" width="8" height="136" rx="2"/>
+        <path d="M20 64 Q20 96 60 100 Q100 96 100 64 L92 64 Q92 88 60 91 Q28 88 28 64 Z"/>
+        <polygon points="60,4 70,30 64,26 64,94 56,94 56,26 50,30"/>
+        <polygon points="24,22 32,46 27,43 27,70 21,70 21,43 16,46"/>
+        <polygon points="96,22 104,46 99,43 99,70 93,70 93,43 88,46"/>
+        <rect x="44" y="176" width="32" height="8" rx="2"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- F00 CAPA -->
+<section class="frame" id="f00">
+  <div class="class-bar"><span>OSTENSIVO · USO INTERNO</span><span>SQUAD DELTA · OPEN FINANCE</span><span>AAR 3T26</span></div>
+  <div class="corner c-tl"></div><div class="corner c-tr"></div><div class="corner c-bl"></div><div class="corner c-br"></div>
+  <div class="inner" style="justify-content:center;padding-left:140px">
+    <div style="display:flex;align-items:center;gap:90px">
+      <div style="flex:1">
+        <div class="eyebrow">After Action Review · jul → set 2026</div>
+        <h1 style="font-size:168px;margin:18px 0 8px">OPERAÇÃO<br><span class="brass">TRIDENTE</span></h1>
+        <div class="q" style="font-size:36px;max-width:1000px">Revisão do 3º trimestre. Comemorar o que conquistamos, encarar o que falhou e sair com ordens claras para o 4T26.</div>
+        <div style="display:flex;gap:0;margin-top:56px;width:1180px;font-family:var(--f-mono)">
+          <div style="flex:3;border-top:6px solid var(--steel);padding-top:12px"><div style="font-size:15px;color:var(--steel)">00–03</div><div style="font-family:var(--f-head);font-size:24px;font-weight:700">BRIEFING</div></div>
+          <div style="flex:5;border-top:6px solid var(--brass);padding-top:12px;padding-left:8px"><div style="font-size:15px;color:var(--steel)">03–08</div><div style="font-family:var(--f-head);font-size:24px;font-weight:700">O PLANO</div></div>
+          <div style="flex:8;border-top:6px solid var(--go);padding-top:12px;padding-left:8px"><div style="font-size:15px;color:var(--steel)">08–16</div><div style="font-family:var(--f-head);font-size:24px;font-weight:700">O QUE ACONTECEU</div></div>
+          <div style="flex:6;border-top:6px solid var(--amber);padding-top:12px;padding-left:8px"><div style="font-size:15px;color:var(--steel)">16–22</div><div style="font-family:var(--f-head);font-size:24px;font-weight:700">POR QUÊ</div></div>
+          <div style="flex:5;border-top:6px solid var(--signal);padding-top:12px;padding-left:8px"><div style="font-size:15px;color:var(--steel)">22–27</div><div style="font-family:var(--f-head);font-size:24px;font-weight:700">ORDENS 4T26</div></div>
+          <div style="flex:3;border-top:6px solid var(--sand);padding-top:12px;padding-left:8px"><div style="font-size:15px;color:var(--steel)">27–30</div><div style="font-family:var(--f-head);font-size:24px;font-weight:700">HONRA</div></div>
+        </div>
+      </div>
+      <svg class="trident" width="300" height="500" style="flex:none;filter:drop-shadow(0 0 40px rgba(201,162,74,.25))"><use href="#trident"/></svg>
+    </div>
+  </div>
+  <div class="foot"><span>TIME BOX 30 MIN</span><span>“O ÚNICO DIA FÁCIL FOI ONTEM.”</span><span>PRÊMIO: MEDALHA TRIDENTE · R$ 200</span></div>
+  <div class="class-bar bottom"><span>OSTENSIVO · USO INTERNO</span><span>FRAME 00 / 06</span></div>
+</section>
+
+<!-- F01 BRIEFING -->
+<section class="frame" id="f01">
+  <div class="class-bar"><span>OSTENSIVO · USO INTERNO</span><span>FASE 0 · BRIEFING · 00:00–03:00</span><span>AAR 3T26</span></div>
+  <div class="corner c-tl"></div><div class="corner c-tr"></div><div class="corner c-bl"></div><div class="corner c-br"></div>
+  <div class="inner">
+    <div class="hdr">
+      <div><div class="eyebrow">Fase 0 · 3 min</div><h1>BRIEFING DE ABERTURA</h1></div>
+      <div class="meta">MIRO: <b>Timer 3:00</b><br>Reações + <b>Trazer todos até mim</b></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.05fr;gap:40px;flex:1;margin-top:36px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <h2 class="brass">Regras de engajamento</h2>
+        <div style="display:flex;flex-direction:column;gap:12px;font-size:24px;line-height:1.3">
+          <div style="display:flex;gap:18px;align-items:baseline"><span style="font-family:var(--f-mono);color:var(--brass)">ROE-1</span><span><b>Sem patente na sala.</b> Todo mundo fala, de estagiário a liderança.</span></div>
+          <div style="display:flex;gap:18px;align-items:baseline"><span style="font-family:var(--f-mono);color:var(--brass)">ROE-2</span><span><b>Fato antes de opinião.</b> Datas, entregas, números.</span></div>
+          <div style="display:flex;gap:18px;align-items:baseline"><span style="font-family:var(--f-mono);color:var(--brass)">ROE-3</span><span><b>O quê, nunca quem.</b> Analisamos o sistema, não as pessoas.</span></div>
+          <div style="display:flex;gap:18px;align-items:baseline"><span style="font-family:var(--f-mono);color:var(--brass)">ROE-4</span><span><b>O que é dito aqui fica aqui.</b> As lições saem, os nomes não.</span></div>
+          <div style="display:flex;gap:18px;align-items:baseline"><span style="font-family:var(--f-mono);color:var(--brass)">ROE-5</span><span><b>Time box é ordem.</b> Quando o timer zera, avançamos.</span></div>
+        </div>
+        <div class="zone" style="flex:1;margin-top:18px">
+          <div class="zl"><span class="dot bg-brass"></span>Chamada · callsigns</div>
+          <div class="zs">Cada operador cola um post-it com nome + callsign (ex.: “Ana · VÍBORA”).</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <h2 class="brass">Check-in de prontidão</h2>
+        <div class="q" style="font-size:24px">Com que energia você chega ao fim do 3T? Cole um ponto na sua faixa.</div>
+        <div style="display:grid;grid-template-rows:repeat(5,1fr);gap:10px;flex:1">
+          <div class="zone" style="border-style:solid;border-color:rgba(95,163,122,.6)"><div class="zl go" style="font-size:26px">5 · Pronto para o próximo salto</div></div>
+          <div class="zone" style="border-style:solid;border-color:rgba(95,163,122,.35)"><div class="zl" style="font-size:26px;color:#9cc7a9">4 · Firme, com fôlego</div></div>
+          <div class="zone" style="border-style:solid;border-color:rgba(224,164,58,.5)"><div class="zl amber" style="font-size:26px">3 · Operacional, mas cansado</div></div>
+          <div class="zone" style="border-style:solid;border-color:rgba(217,72,59,.35)"><div class="zl" style="font-size:26px;color:#e08a80">2 · Precisando de reabastecimento</div></div>
+          <div class="zone" style="border-style:solid;border-color:rgba(217,72,59,.6)"><div class="zl signal" style="font-size:26px">1 · Pedindo extração</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="class-bar bottom"><span>OSTENSIVO · USO INTERNO</span><span>FRAME 01 / 06</span></div>
+</section>
+
+<!-- F02 O PLANO -->
+<section class="frame" id="f02">
+  <div class="class-bar"><span>OSTENSIVO · USO INTERNO</span><span>FASE 1 · O QUE ESTAVA PLANEJADO · 03:00–08:00</span><span>AAR 3T26</span></div>
+  <div class="corner c-tl"></div><div class="corner c-tr"></div><div class="corner c-bl"></div><div class="corner c-br"></div>
+  <div class="inner">
+    <div class="hdr">
+      <div><div class="eyebrow">Fase 1 · 5 min · pergunta 1 do AAR</div><h1>OBJETIVOS DA MISSÃO</h1></div>
+      <div class="meta">MIRO: <b>Timer 5:00</b> · arraste cada<br>marco para o status real</div>
+    </div>
+    <!-- timeline -->
+    <div style="position:relative;height:250px;margin-top:30px">
+      <div style="position:absolute;left:0;right:0;top:56px;height:4px;background:linear-gradient(90deg,var(--steel),var(--brass))"></div>
+      <div style="position:absolute;left:0;top:0;font-family:var(--f-head);font-size:28px;font-weight:700;color:var(--steel)">JUL</div>
+      <div style="position:absolute;left:33.3%;top:0;font-family:var(--f-head);font-size:28px;font-weight:700;color:var(--steel)">AGO</div>
+      <div style="position:absolute;left:66.6%;top:0;font-family:var(--f-head);font-size:28px;font-weight:700;color:var(--steel)">SET</div>
+      <div style="position:absolute;right:0;top:0;font-family:var(--f-head);font-size:28px;font-weight:700;color:var(--brass)">→ 4T26</div>
+      <!-- markers: position = day of quarter / 92 -->
+      <div class="mk" style="left:12%"><i></i><b>SPRINT 13</b><span>Portabilidade · Dados · Pagamentos</span></div>
+      <div class="mk" style="left:38%"><i></i><b>05/08 · SPRINT 14</b><span>Quadros das 3 frentes</span></div>
+      <div class="mk hi" style="left:61%"><i></i><b>28/08 · GUIA UX v23</b><span>Pix Automático · JSR · hybrid flow</span></div>
+      <div class="mk" style="left:68%;top:150px"><i></i><b>01/09 · PCM 2026C</b><span>Pagamentos v4 descontinuada</span></div>
+      <div class="mk hi" style="left:78%"><i></i><b>11/09 · VÍNCULO v2.3</b><span>Marco 100% JSR</span></div>
+      <div class="mk hi" style="left:81%;top:150px"><i></i><b>14/09 · CRÉDITO</b><span>Marco 100% sem consignação</span></div>
+      <div class="mk hi" style="left:auto;right:0;transform:none;align-items:flex-end;text-align:right"><i style="margin-right:40px"></i><b>22/09 · CIBA A1</b><span>Consentimento v3.3.1</span></div>
+    </div>
+    <style>
+      .mk{position:absolute;top:46px;transform:translateX(-12px);display:flex;flex-direction:column;gap:4px;max-width:260px;white-space:nowrap}
+      .mk i{width:24px;height:24px;border-radius:50%;background:var(--abyss);border:4px solid var(--steel);display:block}
+      .mk.hi i{border-color:var(--brass);box-shadow:0 0 0 6px rgba(201,162,74,.18)}
+      .mk b{font-family:var(--f-mono);font-size:16px;font-weight:600;margin-top:8px;color:var(--sand);letter-spacing:.04em}
+      .mk span{font-size:16px;color:var(--steel);line-height:1.25}
+      .mk[style*="top:150px"] i{display:none}
+      .mk[style*="top:150px"]{border-left:2px solid var(--line);padding-left:10px;transform:none}
+    </style>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;flex:1;margin-top:16px">
+      <div class="zone"><span class="stripe bg-go"></span><div class="zl go">Cumprido</div><div class="zs">Entregue no prazo e com a qualidade combinada.</div><div class="zh">VERDE</div></div>
+      <div class="zone"><span class="stripe bg-amber"></span><div class="zl amber">Parcial</div><div class="zs">Entregue com atraso, escopo reduzido ou exceção.</div><div class="zh">ÂMBAR</div></div>
+      <div class="zone"><span class="stripe bg-signal"></span><div class="zl signal">Não cumprido</div><div class="zs">Não saiu. Vai para a análise de causa.</div><div class="zh">VERMELHO</div></div>
+    </div>
+  </div>
+  <div class="class-bar bottom"><span>OSTENSIVO · USO INTERNO</span><span>FRAME 02 / 06</span></div>
+</section>
+
+<!-- F03 CAMPO DE BATALHA -->
+<section class="frame" id="f03">
+  <div class="class-bar"><span>OSTENSIVO · USO INTERNO</span><span>FASE 2 · O QUE REALMENTE ACONTECEU · 08:00–16:00</span><span>AAR 3T26</span></div>
+  <div class="corner c-tl"></div><div class="corner c-tr"></div><div class="corner c-bl"></div><div class="corner c-br"></div>
+  <div class="inner">
+    <div class="hdr">
+      <div><div class="eyebrow">Fase 2 · 8 min · pergunta 2 do AAR</div><h1>RELATO DE CAMPO</h1></div>
+      <div class="meta">MIRO: <b>Modo privado</b> 4:00 escrita em silêncio<br>depois <b>revelar</b> + agrupar 4:00</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;flex:1;margin-top:30px">
+      <div class="zone"><span class="stripe bg-go"></span><div class="zl go">Alvos neutralizados</div><div class="zs">Vitórias e acertos. O que entregamos e devemos comemorar?</div><div class="zh">POST-IT VERDE</div></div>
+      <div class="zone"><span class="stripe bg-signal"></span><div class="zl signal">Fogo inimigo</div><div class="zs">Erros, bloqueios e baixas. O que nos atingiu ou falhou?</div><div class="zh">POST-IT VERMELHO</div></div>
+      <div class="zone"><span class="stripe bg-steel"></span><div class="zl" style="color:#b9c8d8">Inteligência coletada</div><div class="zs">Aprendizados. O que sabemos hoje que não sabíamos em julho?</div><div class="zh">POST-IT AZUL</div></div>
+    </div>
+    <div class="zone" style="height:190px;margin-top:24px;border-color:rgba(201,162,74,.6)"><span class="stripe bg-brass"></span>
+      <div class="zl brass">Menção honrosa</div>
+      <div class="zs">Indique quem fez a diferença no 3T e por quê, em uma frase. Essas indicações concorrem à Medalha Tridente.</div>
+      <div class="zh">POST-IT AMARELO · 1 POR PESSOA</div>
+    </div>
+  </div>
+  <div class="class-bar bottom"><span>OSTENSIVO · USO INTERNO</span><span>FRAME 03 / 06</span></div>
+</section>
+
+<!-- F04 POR QUÊ -->
+<section class="frame" id="f04">
+  <div class="class-bar"><span>OSTENSIVO · USO INTERNO</span><span>FASE 3 · POR QUE ACONTECEU · 16:00–22:00</span><span>AAR 3T26</span></div>
+  <div class="corner c-tl"></div><div class="corner c-tr"></div><div class="corner c-bl"></div><div class="corner c-br"></div>
+  <div class="inner">
+    <div class="hdr">
+      <div><div class="eyebrow">Fase 3 · 6 min · pergunta 3 do AAR</div><h1>ANÁLISE DE CAUSA</h1></div>
+      <div class="meta">MIRO: <b>Votação</b> 3 votos por pessoa · 2:00<br>Top 1 vai para os <b>5 porquês</b> · 4:00</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:28px;flex:1;margin-top:30px">
+      <div class="zone"><span class="stripe bg-go"></span><div class="zl go">Sustentar</div><div class="zs">O que funcionou e precisa virar padrão do time.</div></div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-family:var(--f-head);font-size:30px;font-weight:800;letter-spacing:.08em;color:var(--amber)">5 PORQUÊS · ITEM MAIS VOTADO</div>
+        <div class="zone" style="height:96px;border-style:solid;border-color:var(--amber)"><div class="zl" style="font-size:22px;color:var(--steel)">PROBLEMA</div></div>
+        <div class="why">1 · Por quê?</div><div class="why">2 · Por quê?</div><div class="why">3 · Por quê?</div><div class="why">4 · Por quê?</div>
+        <div class="why" style="border-color:var(--signal);color:var(--sand)">5 · Causa raiz</div>
+      </div>
+      <div class="zone"><span class="stripe bg-amber"></span><div class="zl amber">Melhorar</div><div class="zs">O que precisa mudar. Seja específico: processo, ferramenta, acordo.</div></div>
+    </div>
+    <style>.why{flex:1;border:2px dashed rgba(224,164,58,.4);background:rgba(16,32,51,.55);padding:10px 16px;font-family:var(--f-mono);font-size:17px;color:var(--steel);letter-spacing:.06em}</style>
+  </div>
+  <div class="class-bar bottom"><span>OSTENSIVO · USO INTERNO</span><span>FRAME 04 / 06</span></div>
+</section>
+
+<!-- F05 ORDENS -->
+<section class="frame" id="f05">
+  <div class="class-bar"><span>OSTENSIVO · USO INTERNO</span><span>FASE 4 · O QUE FAREMOS NO 4T26 · 22:00–27:00</span><span>AAR 3T26</span></div>
+  <div class="corner c-tl"></div><div class="corner c-tr"></div><div class="corner c-bl"></div><div class="corner c-br"></div>
+  <div class="inner">
+    <div class="hdr">
+      <div><div class="eyebrow">Fase 4 · 5 min · pergunta 4 do AAR</div><h1>ORDENS PARA O 4T26</h1></div>
+      <div class="meta">MIRO: <b>Cards</b> com responsável e data<br>Máximo de <b>3 ordens</b>. Menos é mais.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:120px 2.2fr 1fr 1fr 1.6fr;gap:0;margin-top:34px;font-family:var(--f-mono);font-size:16px;letter-spacing:.18em;color:var(--steel)">
+      <div style="padding:0 0 12px">ORDEM</div><div style="padding:0 0 12px 20px">AÇÃO (VERBO + OBJETO)</div><div style="padding:0 0 12px 20px">DONO</div><div style="padding:0 0 12px 20px">PRAZO</div><div style="padding:0 0 12px 20px">SINAL DE SUCESSO</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:18px;flex:1">
+      <div class="ord"><div class="n">I</div><div></div><div></div><div></div><div></div></div>
+      <div class="ord"><div class="n">II</div><div></div><div></div><div></div><div></div></div>
+      <div class="ord"><div class="n">III</div><div></div><div></div><div></div><div></div></div>
+    </div>
+    <div style="margin-top:20px;font-size:21px;color:var(--steel)">As ordens seguem para o board <b style="color:var(--brass)">Operação Tridente 4T26 · BigRoom Squad Delta</b> e são revisadas na primeira cerimônia do trimestre.</div>
+    <style>
+      .ord{flex:1;display:grid;grid-template-columns:120px 2.2fr 1fr 1fr 1.6fr;border:2px solid var(--line);background:rgba(16,32,51,.6)}
+      .ord>div{border-left:2px dashed rgba(142,162,184,.25)}
+      .ord .n{border:0;background:var(--signal);color:var(--sand);display:flex;align-items:center;justify-content:center;font-family:var(--f-stencil);font-size:64px}
+    </style>
+  </div>
+  <div class="class-bar bottom"><span>OSTENSIVO · USO INTERNO</span><span>FRAME 05 / 06</span></div>
+</section>
+
+<!-- F06 HONRA -->
+<section class="frame" id="f06">
+  <div class="class-bar"><span>OSTENSIVO · USO INTERNO</span><span>FASE 5 · CERIMÔNIA DE HONRA · 27:00–30:00</span><span>AAR 3T26</span></div>
+  <div class="corner c-tl"></div><div class="corner c-tr"></div><div class="corner c-bl"></div><div class="corner c-br"></div>
+  <div class="inner">
+    <div class="hdr">
+      <div><div class="eyebrow">Fase 5 · 3 min</div><h1>MEDALHA <span class="brass">TRIDENTE</span></h1></div>
+      <div class="meta">MIRO: <b>Votação anônima</b> · 1 voto · 1:30<br>Não vale votar em si mesmo</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:40px;flex:1;margin-top:30px">
+      <div class="zone" style="border-color:rgba(201,162,74,.6)"><span class="stripe bg-brass"></span>
+        <div class="zl brass">Indicados</div>
+        <div class="zs">Arraste para cá as menções honrosas do Relato de Campo. Uma por indicado; agrupe se houver mais de uma.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;border:2px solid var(--brass);background:radial-gradient(circle at 50% 35%,rgba(201,162,74,.18),transparent 65%),rgba(16,32,51,.7);padding:30px">
+        <svg class="trident" width="150" height="250"><use href="#trident"/></svg>
+        <div style="font-family:var(--f-mono);font-size:18px;letter-spacing:.3em;color:var(--steel)">PRÊMIO</div>
+        <div style="font-family:var(--f-stencil);font-size:110px;line-height:1;color:var(--brass)">R$ 200</div>
+        <div style="font-family:var(--f-head);font-size:30px;font-weight:700;text-align:center;letter-spacing:.04em">VALE-COMPRA · O VENCEDOR<br>ESCOLHE A LOJA DO CUPOM</div>
+        <div style="font-size:18px;color:var(--steel);text-align:center;max-width:480px">Empate: segundo turno de 60 s só entre os empatados.</div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:22px">
+      <div style="font-family:var(--f-head);font-size:28px;font-weight:600;color:var(--steel)">Critério: quem colocou o time acima de si e tornou a missão possível.</div>
+      <div style="font-family:var(--f-stencil);font-size:46px;color:var(--brass);letter-spacing:.06em">HOOYAH!</div>
+    </div>
+  </div>
+  <div class="class-bar bottom"><span>OSTENSIVO · USO INTERNO</span><span>FRAME 06 / 06</span></div>
+</section>
+
+</body>
+</html>

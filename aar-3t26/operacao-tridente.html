@@ -1,0 +1,660 @@
+<title>Operação Tridente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: one-column ops console — hero briefing, mission clock, intel timeline, medal ceremony, Miro kit. Deliberately single dark look (night ops room). */
+:root{
+  --abyss:#0A1420; --hull:#102033; --deck:#16293F; --line:#2A425E;
+  --steel:#8EA2B8; --sand:#E6DCC6; --brass:#C9A24A; --brass-dim:#8A7034;
+  --go:#5FA37A; --amber:#E0A43A; --signal:#D9483B;
+  --f-stencil:"Saira Stencil One","Barlow Condensed",Impact,sans-serif;
+  --f-head:"Barlow Condensed","Arial Narrow",sans-serif;
+  --f-body:"Barlow","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{background:var(--abyss)}
+body{margin:0;color:var(--sand);font-family:var(--f-body);font-size:17px;line-height:1.5;
+  background:
+   linear-gradient(rgba(142,162,184,.05) 1px,transparent 1px) 0 0/48px 48px,
+   linear-gradient(90deg,rgba(142,162,184,.05) 1px,transparent 1px) 0 0/48px 48px,
+   var(--abyss)}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:0 64px}
+.classbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--brass);color:var(--abyss);font-family:var(--f-mono);font-size:11px;letter-spacing:.22em;display:flex;justify-content:space-between;gap:12px;padding:6px 20px;text-transform:uppercase}
+.classbar span:nth-child(2){text-align:center}
+@media (max-width:640px){.classbar span:nth-child(2){display:none}}
+nav.jump{display:flex;flex-wrap:wrap;gap:6px 18px;padding-block:14px;font-family:var(--f-mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid var(--line)}
+nav.jump a{color:var(--steel);text-decoration:none}
+nav.jump a:hover,nav.jump a:focus-visible{color:var(--brass)}
+a{color:var(--brass)}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--brass)}
+h1,h2,h3{text-wrap:balance;margin:0}
+h2{font-family:var(--f-stencil);font-weight:400;font-size:clamp(34px,5vw,54px);line-height:1;letter-spacing:.02em}
+h3{font-family:var(--f-head);font-weight:800;font-size:22px;letter-spacing:.06em;text-transform:uppercase}
+p{margin:0}
+.lede{color:var(--steel);font-size:18px;max-width:64ch}
+section.block{padding-block:64px 8px;display:flex;flex-direction:column;gap:22px;scroll-margin-top:40px}
+.sec-head{display:flex;flex-direction:column;gap:10px}
+.mono{font-family:var(--f-mono)}
+.btn{font-family:var(--f-head);font-weight:700;font-size:17px;letter-spacing:.1em;text-transform:uppercase;border:2px solid var(--line);background:var(--hull);color:var(--sand);padding:10px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:44px}
+.btn:hover{border-color:var(--steel)}
+.btn.primary{background:var(--brass);border-color:var(--brass);color:var(--abyss)}
+.btn.primary:hover{background:#d7b259}
+.btn.ghost{background:transparent}
+.btn[aria-pressed="true"]{border-color:var(--brass);color:var(--brass)}
+
+/* HERO */
+.hero{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:32px;align-items:center;padding-block:48px 24px}
+@media (max-width:860px){.hero{grid-template-columns:1fr}}
+.hero h1{font-family:var(--f-stencil);font-weight:400;font-size:clamp(56px,10vw,118px);line-height:.92;letter-spacing:.01em}
+.hero h1 .b{color:var(--brass);display:block}
+.hero .sub{font-family:var(--f-head);font-size:clamp(20px,2.4vw,26px);font-weight:600;color:var(--steel);max-width:34ch;margin-top:16px}
+.bluf{margin-top:22px;border-left:3px solid var(--brass);padding:4px 0 4px 16px;max-width:60ch}
+.bluf .mono{font-size:12px;letter-spacing:.2em;color:var(--brass)}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-top:26px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.facts div{padding:12px 14px 12px 0}
+.facts b{display:block;font-family:var(--f-stencil);font-weight:400;font-size:34px;line-height:1.05;color:var(--sand)}
+.facts span{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--steel)}
+@media (max-width:520px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.sonar{position:relative;aspect-ratio:1;max-width:460px;width:100%;justify-self:center}
+.sonar canvas{width:100%;height:100%;display:block}
+.sonar svg{position:absolute;left:50%;top:50%;width:24%;transform:translate(-50%,-50%);color:var(--brass);filter:drop-shadow(0 0 24px rgba(201,162,74,.35))}
+.sonar .dtg{position:absolute;left:0;right:0;bottom:-6px;text-align:center;font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;color:var(--steel)}
+
+/* CLOCK */
+.console{border:2px solid var(--line);background:linear-gradient(180deg,rgba(22,41,63,.85),rgba(16,32,51,.85));display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
+@media (max-width:900px){.console{grid-template-columns:1fr}}
+.clock-pane{padding:26px;border-right:2px solid var(--line);display:flex;flex-direction:column;gap:18px}
+@media (max-width:900px){.clock-pane{border-right:0;border-bottom:2px solid var(--line)}}
+.ring{position:relative;width:min(300px,100%);aspect-ratio:1;align-self:center}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .read{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.ring .big{font-family:var(--f-mono);font-weight:600;font-size:clamp(46px,7vw,62px);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.ring .small{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;color:var(--steel);text-transform:uppercase}
+.ring.warn .big{color:var(--amber)}
+.ring.over .big{color:var(--signal)}
+.controls{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.total{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:13px;color:var(--steel);letter-spacing:.08em;font-variant-numeric:tabular-nums}
+.rail{display:flex;height:10px;gap:3px}
+.rail i{display:block;height:100%;background:var(--line);position:relative;overflow:hidden}
+.rail i b{position:absolute;inset:0 auto 0 0;width:0;background:var(--c)}
+.phase-pane{padding:26px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.phase-list{display:flex;flex-wrap:wrap;gap:6px}
+.phase-list button{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;padding:7px 10px;border:1px solid var(--line);background:transparent;color:var(--steel);cursor:pointer;min-height:36px}
+.phase-list button.on{border-color:var(--c);color:var(--sand);background:rgba(255,255,255,.04);box-shadow:inset 0 -3px 0 var(--c)}
+.phase-list button.done{color:#5f7389}
+.ph-title{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.ph-title .q{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;color:var(--c,var(--brass));text-transform:uppercase}
+.ph-name{font-family:var(--f-stencil);font-size:clamp(32px,4.2vw,46px);line-height:1}
+.ph-ask{font-family:var(--f-head);font-size:24px;font-weight:600;color:var(--sand)}
+.ph-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:600px){.ph-cols{grid-template-columns:1fr}}
+.ph-box{border-top:2px solid var(--line);padding-top:10px;min-width:0}
+.ph-box h4{margin:0 0 8px;font-family:var(--f-mono);font-size:11px;letter-spacing:.22em;color:var(--steel);text-transform:uppercase;font-weight:500}
+.ph-box ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.ph-box li::marker{color:var(--brass)}
+.script{font-size:17px;color:var(--sand);border-left:3px solid var(--c,var(--brass));padding-left:14px;font-style:italic}
+.flash{animation:flash .9s ease-out}
+@keyframes flash{0%{box-shadow:0 0 0 0 rgba(201,162,74,.7)}100%{box-shadow:0 0 0 22px rgba(201,162,74,0)}}
+
+/* INTEL */
+.tally{display:flex;height:14px;border:1px solid var(--line);background:var(--hull)}
+.tally i{display:block;height:100%;transition:width .5s ease}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;color:var(--steel)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:10px;height:10px;display:inline-block}
+.timeline{position:relative;display:flex;flex-direction:column;gap:0;padding-left:28px}
+.timeline::before{content:"";position:absolute;left:9px;top:8px;bottom:8px;width:2px;background:linear-gradient(var(--steel),var(--brass))}
+.month{font-family:var(--f-head);font-weight:800;font-size:20px;letter-spacing:.14em;color:var(--steel);padding:18px 0 8px;position:relative}
+.month::before{content:"";position:absolute;left:-25px;top:26px;width:14px;height:2px;background:var(--steel)}
+.mk{position:relative;display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:16px;align-items:start;padding:14px 0;border-bottom:1px dashed var(--line)}
+@media (max-width:640px){.mk{grid-template-columns:minmax(0,1fr);gap:6px}}
+.mk::before{content:"";position:absolute;left:-25px;top:19px;width:12px;height:12px;border-radius:50%;background:var(--abyss);border:3px solid var(--st,var(--steel))}
+.mk .d{font-family:var(--f-mono);font-size:14px;color:var(--brass);font-weight:600;padding-top:2px}
+.mk .t{font-family:var(--f-head);font-size:21px;font-weight:700;letter-spacing:.02em;line-height:1.2}
+.mk .x{color:var(--steel);font-size:15.5px;margin-top:3px;max-width:70ch}
+.mk .fr{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;border:1px solid var(--line);color:var(--steel);padding:2px 8px;text-transform:uppercase}
+.status{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;min-width:150px;min-height:40px;padding:8px 12px;border:2px solid var(--st,var(--line));background:transparent;color:var(--st,var(--steel));cursor:pointer;text-align:center}
+.status:hover{background:rgba(255,255,255,.04)}
+.radar4t{border:2px solid var(--brass-dim);padding:18px 20px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;background:rgba(201,162,74,.05)}
+@media (max-width:760px){.radar4t{grid-template-columns:1fr}}
+.radar4t b{display:block;font-family:var(--f-mono);color:var(--brass);font-size:14px}
+.radar4t span{font-size:15.5px;color:var(--steel)}
+
+/* MEDAL */
+.medal{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:0;border:2px solid var(--brass-dim)}
+@media (max-width:860px){.medal{grid-template-columns:1fr}}
+.nominees{padding:24px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.addrow{display:flex;gap:8px}
+.addrow input{flex:1;min-width:0;background:var(--abyss);border:2px solid var(--line);color:var(--sand);font:inherit;padding:10px 12px;min-height:44px}
+.addrow input:focus{border-color:var(--brass);outline:none}
+.nlist{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.nlist li{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto auto;gap:6px;align-items:center;border:1px solid var(--line);background:var(--hull);padding:6px 6px 6px 14px}
+.nlist .nm{font-family:var(--f-head);font-size:20px;font-weight:700;overflow-wrap:anywhere}
+.nlist .v{font-family:var(--f-mono);font-size:20px;font-variant-numeric:tabular-nums;min-width:36px;text-align:center}
+.nlist button{width:40px;height:40px;border:1px solid var(--line);background:transparent;color:var(--sand);cursor:pointer;font-family:var(--f-mono);font-size:18px}
+.nlist button:hover{border-color:var(--brass)}
+.nlist .del{color:var(--steel);font-size:14px}
+.empty{color:var(--steel);font-size:15px;border:1px dashed var(--line);padding:14px}
+.podium{position:relative;padding:28px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;background:radial-gradient(circle at 50% 30%,rgba(201,162,74,.16),transparent 62%),var(--hull);border-left:2px solid var(--brass-dim);min-height:420px;overflow:hidden}
+@media (max-width:860px){.podium{border-left:0;border-top:2px solid var(--brass-dim)}}
+.podium canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.coin{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#f0d68c,var(--brass) 45%,var(--brass-dim));box-shadow:0 0 0 6px rgba(201,162,74,.25),0 0 50px rgba(201,162,74,.35);color:var(--abyss)}
+.coin svg{width:46%}
+.coin.spin{animation:spin 1.2s cubic-bezier(.2,.7,.2,1)}
+@keyframes spin{0%{transform:rotateY(0) scale(.6);opacity:.2}70%{transform:rotateY(900deg) scale(1.08);opacity:1}100%{transform:rotateY(1080deg) scale(1)}}
+.prize{font-family:var(--f-stencil);font-size:64px;line-height:1;color:var(--brass)}
+.winner{font-family:var(--f-stencil);font-size:clamp(30px,4vw,44px);line-height:1.05;min-height:1.1em;overflow-wrap:anywhere}
+.count{font-family:var(--f-stencil);font-size:120px;line-height:1;color:var(--sand)}
+.rules{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:860px){.rules{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.rules{grid-template-columns:1fr}}
+.rules div{border-top:2px solid var(--brass-dim);padding-top:10px}
+.rules b{font-family:var(--f-head);font-size:19px;letter-spacing:.04em;display:block}
+.rules span{font-size:15.5px;color:var(--steel)}
+
+/* KIT */
+.kit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px}
+@media (max-width:860px){.kit{grid-template-columns:1fr}}
+.checks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.checks li{border-bottom:1px dashed var(--line)}
+.checks label{display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;padding:12px 0;cursor:pointer}
+.checks input{appearance:none;width:22px;height:22px;border:2px solid var(--steel);margin:2px 0 0;display:grid;place-items:center;cursor:pointer}
+.checks input:checked{background:var(--go);border-color:var(--go)}
+.checks input:checked::after{content:"";width:6px;height:11px;border:solid var(--abyss);border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.checks b{font-family:var(--f-head);font-size:19px;letter-spacing:.03em}
+.checks span{display:block;color:var(--steel);font-size:15px}
+.checks input:checked + div b{color:var(--steel);text-decoration:line-through;text-decoration-color:var(--go)}
+.feat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:480px){.feat{grid-template-columns:1fr}}
+.feat div{border:1px solid var(--line);background:var(--hull);padding:12px 14px}
+.feat b{font-family:var(--f-head);font-size:18px;letter-spacing:.04em;display:block;color:var(--sand)}
+.feat span{font-size:14.5px;color:var(--steel)}
+.invite{position:relative;border:2px solid var(--line);background:var(--abyss)}
+.invite pre{margin:0;padding:18px;white-space:pre-wrap;font-family:var(--f-mono);font-size:13.5px;line-height:1.6;color:var(--sand);overflow-wrap:anywhere}
+.invite .btn{position:absolute;top:10px;right:10px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--brass);color:var(--abyss);font-family:var(--f-mono);font-size:13px;letter-spacing:.12em;padding:10px 16px;z-index:50}
+footer{margin-top:64px;padding-block:22px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between;font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;color:var(--steel);text-transform:uppercase}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="trident" viewBox="0 0 120 200">
+      <g fill="currentColor">
+        <rect x="56" y="58" width="8" height="136" rx="2"/>
+        <path d="M20 64 Q20 96 60 100 Q100 96 100 64 L92 64 Q92 88 60 91 Q28 88 28 64 Z"/>
+        <polygon points="60,4 70,30 64,26 64,94 56,94 56,26 50,30"/>
+        <polygon points="24,22 32,46 27,43 27,70 21,70 21,43 16,46"/>
+        <polygon points="96,22 104,46 99,43 99,70 93,70 93,43 88,46"/>
+        <rect x="44" y="176" width="32" height="8" rx="2"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="classbar"><span>Ostensivo · uso interno</span><span>Squad Delta · Open Finance</span><span>AAR 3T26</span></div>
+
+<div class="wrap">
+  <nav class="jump" aria-label="Seções">
+    <a href="#relogio">Relógio da missão</a>
+    <a href="#inteligencia">Objetivos do 3T</a>
+    <a href="#medalha">Medalha Tridente</a>
+    <a href="#kit">Kit Miro</a>
+    <a href="#convocacao">Convocação</a>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <div class="eyebrow">After Action Review · jul → set 2026</div>
+      <h1>Operação <span class="b">Tridente</span></h1>
+      <p class="sub">Comemorar o que conquistamos, encarar o que falhou e sair com ordens claras para o 4T26.</p>
+      <div class="bluf">
+        <div class="mono">BLUF · bottom line up front</div>
+        <p>Em 30 minutos, o time responde às quatro perguntas do AAR militar: o que estava planejado, o que aconteceu, por que aconteceu e o que faremos diferente. No fim, a Medalha Tridente vai para quem o time escolher.</p>
+      </div>
+      <div class="facts">
+        <div><b>30</b><span>minutos</span></div>
+        <div><b>6</b><span>fases</span></div>
+        <div><b>4</b><span>perguntas AAR</span></div>
+        <div><b>R$ 200</b><span>vale-compra</span></div>
+      </div>
+    </div>
+    <div class="sonar" aria-hidden="true">
+      <canvas id="sonar" width="920" height="920"></canvas>
+      <svg viewBox="0 0 120 200"><use href="#trident"/></svg>
+      <div class="dtg" id="dtg">DTG —</div>
+    </div>
+  </header>
+
+  <!-- MISSION CLOCK -->
+  <section class="block" id="relogio">
+    <div class="sec-head">
+      <div class="eyebrow">Time box · 30:00</div>
+      <h2>Relógio da missão</h2>
+      <p class="lede">Projete esta tela ou deixe ao lado do Miro. Cada fase traz a fala de abertura e o que fazer no board. O sinal sonoro marca a troca de fase.</p>
+    </div>
+    <div class="console" id="console">
+      <div class="clock-pane">
+        <div class="ring" id="ring">
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <circle cx="100" cy="100" r="88" fill="none" stroke="#2A425E" stroke-width="10"/>
+            <circle id="arc" cx="100" cy="100" r="88" fill="none" stroke="#C9A24A" stroke-width="10" stroke-dasharray="552.92" stroke-dashoffset="0"/>
+          </svg>
+          <div class="read">
+            <div class="small" id="ringLabel">Fase 0 · restante</div>
+            <div class="big" id="phaseLeft" aria-live="off">03:00</div>
+            <div class="small" id="ringState">Em espera</div>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="btn primary" id="go" type="button">Iniciar</button>
+          <button class="btn" id="prev" type="button" aria-label="Fase anterior">◂ Fase</button>
+          <button class="btn" id="next" type="button" aria-label="Próxima fase">Fase ▸</button>
+          <button class="btn ghost" id="reset" type="button">Zerar</button>
+        </div>
+        <div class="controls">
+          <button class="btn ghost" id="sound" type="button" aria-pressed="true">Som ligado</button>
+          <button class="btn ghost" id="full" type="button">Tela cheia</button>
+        </div>
+        <div class="rail" id="rail" aria-hidden="true"></div>
+        <div class="total"><span id="elapsed">T+ 00:00</span><span id="remaining">T− 30:00</span></div>
+      </div>
+      <div class="phase-pane">
+        <div class="phase-list" id="phaseList" role="tablist" aria-label="Fases"></div>
+        <div class="ph-title"><span class="q" id="phQ"></span></div>
+        <div class="ph-name" id="phName"></div>
+        <div class="ph-ask" id="phAsk"></div>
+        <p class="script" id="phScript"></p>
+        <div class="ph-cols">
+          <div class="ph-box"><h4>No Miro</h4><ul id="phMiro"></ul></div>
+          <div class="ph-box"><h4>Ritmo</h4><ul id="phBeats"></ul></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTEL -->
+  <section class="block" id="inteligencia">
+    <div class="sec-head">
+      <div class="eyebrow">Fase 1 · o que estava planejado</div>
+      <h2>Objetivos do 3T</h2>
+      <p class="lede">Marcos que o time tinha no radar entre julho e setembro. Clique no status para registrar o veredito do time durante a Fase 1. Os marcos vêm do radar regulatório e dos quadros das sprints 13 e 14; revise antes da sessão.</p>
+    </div>
+    <div class="tally" id="tally" aria-hidden="true"></div>
+    <div class="legend" id="legend"></div>
+    <div class="timeline" id="timeline"></div>
+    <div class="radar4t">
+      <div><b>06/10 · PCM 2026C</b><span>Fim do prazo de adaptação à release da Plataforma de Coleta de Métricas.</span></div>
+      <div><b>03/11 · Go-live crédito</b><span>Crédito Pessoal sem Consignação e Empréstimos obrigatórios em produção.</span></div>
+      <div><b>01/03/27 · Pix 7.4</b><span>Nova jornada de autoatendimento do MED. Entra no planejamento do 4T26.</span></div>
+    </div>
+  </section>
+
+  <!-- MEDAL -->
+  <section class="block" id="medalha">
+    <div class="sec-head">
+      <div class="eyebrow">Fase 5 · cerimônia de honra</div>
+      <h2>Medalha Tridente</h2>
+      <p class="lede">As menções honrosas escritas no Relato de Campo viram os indicados. O time vota no Miro, você lança os votos aqui e revela o vencedor na tela.</p>
+    </div>
+    <div class="medal">
+      <div class="nominees">
+        <h3>Indicados</h3>
+        <form class="addrow" id="addForm" autocomplete="off">
+          <label for="nomInput" class="mono" style="position:absolute;left:-9999px">Nome do indicado</label>
+          <input id="nomInput" placeholder="Nome ou callsign do indicado" maxlength="40">
+          <button class="btn" type="submit">Adicionar</button>
+        </form>
+        <ul class="nlist" id="nlist"></ul>
+        <div class="controls" style="justify-content:flex-start">
+          <button class="btn primary" id="reveal" type="button">Revelar vencedor</button>
+          <button class="btn ghost" id="sample" type="button">Carregar exemplo</button>
+          <button class="btn ghost" id="clearN" type="button">Limpar</button>
+        </div>
+      </div>
+      <div class="podium" id="podium">
+        <canvas id="sparks"></canvas>
+        <div class="coin" id="coin"><svg viewBox="0 0 120 200"><use href="#trident"/></svg></div>
+        <div class="count" id="count" hidden></div>
+        <div class="winner" id="winner">Aguardando votação</div>
+        <div class="prize">R$ 200</div>
+        <div class="mono" style="font-size:12px;letter-spacing:.2em;color:var(--steel);text-transform:uppercase">Vale-compra · o vencedor escolhe a loja</div>
+      </div>
+    </div>
+    <div class="rules">
+      <div><b>Quem pode ser indicado</b><span>Qualquer pessoa do squad, inclusive liderança e parceiros que operaram junto no 3T.</span></div>
+      <div><b>Critério</b><span>Colocou o time acima de si e tornou a missão possível. Impacto, não volume de horas.</span></div>
+      <div><b>Votação</b><span>Anônima no Miro, 1 voto por pessoa, 90 segundos. Não vale votar em si mesmo.</span></div>
+      <div><b>Empate</b><span>Segundo turno de 60 segundos só entre os empatados. Persistindo, o prêmio é dividido.</span></div>
+    </div>
+  </section>
+
+  <!-- KIT -->
+  <section class="block" id="kit">
+    <div class="sec-head">
+      <div class="eyebrow">Preparação · 20 min antes</div>
+      <h2>Kit Miro</h2>
+      <p class="lede">Os sete frames do kit (PNG 3840×2160) entram no board como fundo travado. Os post-its ficam por cima. A lista abaixo guarda seu progresso neste navegador.</p>
+    </div>
+    <div class="kit">
+      <ul class="checks" id="checks"></ul>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <h3>Recursos do Miro em cada fase</h3>
+        <div class="feat">
+          <div><b>Timer com música</b><span>Uma contagem por fase, visível para todos no topo do board.</span></div>
+          <div><b>Trazer todos até mim</b><span>Leva a câmera de todos para o frame da fase atual.</span></div>
+          <div><b>Modo privado</b><span>Escrita em silêncio na Fase 2: ninguém vê os post-its até a revelação.</span></div>
+          <div><b>Sessão de votação</b><span>3 votos na Fase 3 e 1 voto anônimo na Medalha Tridente.</span></div>
+          <div><b>Reações</b><span>Check-in de prontidão e aplausos quando um alvo neutralizado aparece.</span></div>
+          <div><b>Agrupar post-its</b><span>Agrupamento por tema com Miro AI, quando disponível na sua conta.</span></div>
+          <div><b>Cards com responsável</b><span>As ordens do 4T26 com dono e data. Integração com Jira, se usada.</span></div>
+          <div><b>Talktrack</b><span>Briefing gravado de 2 minutos enviado antes, para quem chegar atrasado.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVITE -->
+  <section class="block" id="convocacao">
+    <div class="sec-head">
+      <div class="eyebrow">Envie na véspera</div>
+      <h2>Convocação</h2>
+    </div>
+    <div class="invite">
+      <button class="btn" id="copyInv" type="button">Copiar</button>
+<pre id="invText">🔱 CONVOCAÇÃO · OPERAÇÃO TRIDENTE · AAR 3T26
+
+Quando: [data] · [hora] · 30 minutos cravados
+Onde: Miro · [link do board]
+
+Missão: revisar o 3º trimestre no formato After Action Review, o mesmo que as forças especiais usam depois de cada operação.
+1. O que estava planejado?
+2. O que realmente aconteceu?
+3. Por que aconteceu?
+4. O que faremos diferente no 4T26?
+
+Pré-missão (5 min, opcional): chegue com 1 vitória, 1 tiro que errou o alvo e o nome de quem merece a Medalha Tridente.
+
+Em jogo: vale-compra de R$ 200. Quem vencer escolhe a loja.
+
+Sem patente na sala. O único dia fácil foi ontem.
+HOOYAH.</pre>
+    </div>
+  </section>
+
+  <footer>
+    <span>Operação Tridente · AAR 3T26</span>
+    <span>Ninguém fica para trás</span>
+  </footer>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const store = {
+    get(k, d){ try{ const v = localStorage.getItem('tridente.'+k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+    set(k, v){ try{ localStorage.setItem('tridente.'+k, JSON.stringify(v)); }catch(e){} }
+  };
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const C = {brass:'#C9A24A', go:'#5FA37A', amber:'#E0A43A', signal:'#D9483B', steel:'#8EA2B8', sand:'#E6DCC6'};
+  function toast(msg){ const t=$('#toast'); t.textContent=msg; t.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(()=>t.hidden=true,2200); }
+
+  /* ---------- DTG ---------- */
+  (function dtg(){
+    const m=['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+    const tick=()=>{ const d=new Date(); const p=n=>String(n).padStart(2,'0');
+      $('#dtg').textContent='DTG '+p(d.getUTCDate())+p(d.getUTCHours())+p(d.getUTCMinutes())+'Z '+m[d.getUTCMonth()]+' '+String(d.getUTCFullYear()).slice(2); };
+    tick(); setInterval(tick, 15000);
+  })();
+
+  /* ---------- SONAR ---------- */
+  (function sonar(){
+    const cv=$('#sonar'), x=cv.getContext('2d'); const W=cv.width, R=W/2-8;
+    const blips=[[.42,.6],[.7,.2],[.55,1.9],[.8,2.6],[.33,3.4],[.66,4.1],[.5,5.0],[.86,5.6]];
+    let a=0;
+    function frame(){
+      x.clearRect(0,0,W,W); x.save(); x.translate(W/2,W/2);
+      x.strokeStyle='rgba(142,162,184,.22)'; x.lineWidth=2;
+      for(let i=1;i<=4;i++){ x.beginPath(); x.arc(0,0,R*i/4,0,Math.PI*2); x.stroke(); }
+      x.beginPath(); x.moveTo(-R,0); x.lineTo(R,0); x.moveTo(0,-R); x.lineTo(0,R); x.stroke();
+      x.fillStyle='rgba(142,162,184,.5)'; x.font='22px "IBM Plex Mono", monospace'; x.textAlign='center';
+      ['000','090','180','270'].forEach((t,i)=>{ const an=i*Math.PI/2-Math.PI/2; x.fillText(t, Math.cos(an)*(R-26), Math.sin(an)*(R-26)+8); });
+      const g=x.createConicGradient ? x.createConicGradient(a-0.9,0,0) : null;
+      if(g){ g.addColorStop(0,'rgba(201,162,74,0)'); g.addColorStop(0.14,'rgba(201,162,74,.28)'); g.addColorStop(0.145,'rgba(201,162,74,0)');
+        x.fillStyle=g; x.beginPath(); x.moveTo(0,0); x.arc(0,0,R,a-0.9,a); x.closePath(); x.fill(); }
+      x.strokeStyle='rgba(201,162,74,.85)'; x.lineWidth=3; x.beginPath(); x.moveTo(0,0); x.lineTo(Math.cos(a)*R, Math.sin(a)*R); x.stroke();
+      blips.forEach(([r,an])=>{ let d=((a-an)%(Math.PI*2)+Math.PI*2)%(Math.PI*2); const al=Math.max(0,1-d/3.2);
+        x.fillStyle='rgba(230,220,198,'+(0.12+al*.85)+')'; x.beginPath(); x.arc(Math.cos(an)*R*r, Math.sin(an)*R*r, 7+al*4, 0, Math.PI*2); x.fill(); });
+      x.restore();
+      if(!reduced){ a+=0.012; requestAnimationFrame(frame); }
+    }
+    a=1.2; frame();
+  })();
+
+  /* ---------- MISSION CLOCK ---------- */
+  const PH=[
+    {k:'BRIEFING', n:'Briefing de abertura', d:180, c:C.steel, q:'Fase 0 · 00:00–03:00',
+     ask:'Regras de engajamento e check-in de prontidão.',
+     s:'“Bem-vindos à Operação Tridente. Isto é um After Action Review: olhamos para o trimestre com franqueza, sem patente na sala e sem caça a culpados. Trinta minutos, e o timer manda.”',
+     m:['Timer 3:00 e “Trazer todos até mim” no Frame 00','Cada pessoa cola o callsign no Frame 01','Check-in: um ponto na faixa de prontidão (1 a 5)'],
+     b:['0:00 abertura e regras','1:00 callsigns','2:00 check-in de prontidão']},
+    {k:'O PLANO', n:'Objetivos da missão', d:300, c:C.brass, q:'Fase 1 · 03:00–08:00 · pergunta 1',
+     ask:'O que estava planejado?',
+     s:'“Esses eram os marcos que tínhamos no radar. Para cada um, a pergunta é simples: cumprimos, cumprimos em parte ou não cumprimos? Fato, não opinião.”',
+     m:['Frame 02: arraste cada card de marco para Cumprido, Parcial ou Não cumprido','Registre o veredito também em “Objetivos do 3T”','Não discuta causas agora; elas vêm na Fase 3'],
+     b:['3:00 leitura rápida dos marcos','5:00 time arrasta os cards','7:00 confirma o placar']},
+    {k:'O QUE ACONTECEU', n:'Relato de campo', d:480, c:C.go, q:'Fase 2 · 08:00–16:00 · pergunta 2',
+     ask:'O que realmente aconteceu?',
+     s:'“Quatro minutos em silêncio. Verde para alvos neutralizados, vermelho para fogo inimigo, azul para inteligência coletada, amarelo para a menção honrosa. Uma ideia por post-it.”',
+     m:['Ative o Modo privado e um Timer de 4:00','Revele os post-its e agrupe por tema (Miro AI, se disponível)','Aplausos por Reações a cada alvo neutralizado lido'],
+     b:['8:00 escrita em silêncio','12:00 revelação e agrupamento','14:00 leitura dos temas em voz alta']},
+    {k:'POR QUÊ', n:'Análise de causa', d:360, c:C.amber, q:'Fase 3 · 16:00–22:00 · pergunta 3',
+     ask:'Por que aconteceu?',
+     s:'“Três votos cada um, nos temas que mais mudariam o nosso jogo. O mais votado desce os cinco porquês até a causa raiz. Estamos analisando o sistema, não pessoas.”',
+     m:['Sessão de votação: 3 votos por pessoa, 2:00','Item mais votado vai para a escada dos 5 porquês','Separe em Sustentar e Melhorar'],
+     b:['16:00 votação','18:00 cinco porquês','21:00 sustentar e melhorar']},
+    {k:'ORDENS 4T26', n:'Ordens para o 4T26', d:300, c:C.signal, q:'Fase 4 · 22:00–27:00 · pergunta 4',
+     ask:'O que faremos diferente?',
+     s:'“No máximo três ordens. Cada uma com verbo, dono, prazo e um sinal claro de sucesso. Se não tem dono, não é ordem.”',
+     m:['Frame 05: transforme os itens em Cards com responsável e data','Copie as ordens para o board Operação Tridente 4T26 · BigRoom','Confirme cada dono em voz alta'],
+     b:['22:00 rascunho das ordens','25:00 donos e prazos','26:30 leitura final']},
+    {k:'HONRA', n:'Medalha Tridente', d:180, c:C.sand, q:'Fase 5 · 27:00–30:00',
+     ask:'Quem tornou a missão possível?',
+     s:'“Fechamos honrando quem fez a diferença. Votação anônima, um voto, e não vale votar em si mesmo. O vencedor leva o vale-compra de R$ 200 e escolhe a loja.”',
+     m:['Frame 06: menções honrosas viram os indicados','Votação anônima, 1 voto, 1:30','Revele o vencedor na seção Medalha Tridente'],
+     b:['27:00 leitura dos indicados','27:30 votação','29:00 revelação e “Hooyah!”']}
+  ];
+  const TOTAL=PH.reduce((s,p)=>s+p.d,0);
+  const starts=[]; PH.reduce((s,p,i)=>(starts[i]=s, s+p.d),0);
+  let elapsed=store.get('elapsed',0), running=false, last=0, soundOn=true, lastPhase=-1, wake=null;
+  const fmt=s=>{ s=Math.max(0,Math.round(s)); return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); };
+  const phaseAt=t=>{ for(let i=PH.length-1;i>=0;i--) if(t>=starts[i]) return i; return 0; };
+
+  const rail=$('#rail'), list=$('#phaseList');
+  PH.forEach((p,i)=>{
+    const seg=document.createElement('i'); seg.style.flex=p.d; seg.style.setProperty('--c',p.c); seg.appendChild(document.createElement('b')); rail.appendChild(seg);
+    const b=document.createElement('button'); b.type='button'; b.textContent=p.k; b.style.setProperty('--c',p.c); b.setAttribute('role','tab');
+    b.addEventListener('click',()=>{ elapsed=starts[i]; render(true); }); list.appendChild(b);
+  });
+
+  let actx=null;
+  function beep(times){
+    if(!soundOn) return;
+    try{
+      actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+      for(let k=0;k<times;k++){
+        const o=actx.createOscillator(), g=actx.createGain(); const t0=actx.currentTime+k*0.22;
+        o.type='square'; o.frequency.value= k===times-1 ? 880 : 660;
+        g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(0.12,t0+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t0+0.18);
+        o.connect(g).connect(actx.destination); o.start(t0); o.stop(t0+0.2);
+      }
+    }catch(e){}
+  }
+
+  function render(manual){
+    elapsed=Math.min(Math.max(0,elapsed),TOTAL);
+    const i=phaseAt(elapsed), p=PH[i], into=elapsed-starts[i], left=p.d-into;
+    $('#phaseLeft').textContent=fmt(left);
+    $('#ringLabel').textContent=(elapsed>=TOTAL?'Missão':'Fase '+i)+' · restante';
+    $('#ringState').textContent= elapsed>=TOTAL ? 'Missão cumprida' : running ? 'Em operação' : (elapsed>0 ? 'Pausado' : 'Em espera');
+    const arc=$('#arc'); arc.style.stroke=p.c; arc.style.strokeDashoffset=String(552.92*(into/p.d));
+    const ring=$('#ring'); ring.classList.toggle('warn', running && left<=30 && left>0); ring.classList.toggle('over', elapsed>=TOTAL);
+    $('#elapsed').textContent='T+ '+fmt(elapsed); $('#remaining').textContent='T− '+fmt(TOTAL-elapsed);
+    [...rail.children].forEach((seg,k)=>{ const f=k<i?1:k>i?0:into/PH[k].d; seg.firstChild.style.width=(f*100)+'%'; });
+    [...list.children].forEach((b,k)=>{ b.classList.toggle('on',k===i); b.classList.toggle('done',k<i); b.setAttribute('aria-selected',k===i); });
+    if(i!==lastPhase){
+      const pane=$('.phase-pane'); pane.style.setProperty('--c',p.c);
+      $('#phQ').textContent=p.q; $('#phName').textContent=p.n; $('#phAsk').textContent=p.ask; $('#phScript').textContent=p.s;
+      $('#phMiro').innerHTML=p.m.map(t=>'<li>'+t+'</li>').join(''); $('#phBeats').innerHTML=p.b.map(t=>'<li>'+t+'</li>').join('');
+      if(lastPhase!==-1){ const c=$('#console'); c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash'); if(running && !manual) beep(3); }
+      lastPhase=i;
+    }
+    $('#go').textContent = running ? 'Pausar' : (elapsed>0 && elapsed<TOTAL ? 'Retomar' : 'Iniciar');
+    store.set('elapsed',elapsed);
+  }
+  function loop(ts){
+    if(!running) return;
+    if(last) elapsed+=(ts-last)/1000; last=ts;
+    if(elapsed>=TOTAL){ elapsed=TOTAL; running=false; beep(5); releaseWake(); }
+    render(false);
+    if(running) requestAnimationFrame(loop);
+  }
+  async function holdWake(){ try{ if('wakeLock' in navigator) wake=await navigator.wakeLock.request('screen'); }catch(e){} }
+  function releaseWake(){ try{ wake && wake.release(); }catch(e){} wake=null; }
+  $('#go').addEventListener('click',()=>{
+    if(elapsed>=TOTAL) elapsed=0;
+    running=!running; last=0;
+    if(running){ beep(1); holdWake(); requestAnimationFrame(loop); } else releaseWake();
+    render(true);
+  });
+  $('#next').addEventListener('click',()=>{ const i=phaseAt(elapsed); elapsed= i<PH.length-1 ? starts[i+1] : TOTAL; if(running) beep(2); render(true); });
+  $('#prev').addEventListener('click',()=>{ const i=phaseAt(elapsed); elapsed= (elapsed-starts[i]>5 || i===0) ? starts[i] : starts[i-1]; render(true); });
+  $('#reset').addEventListener('click',()=>{ running=false; elapsed=0; releaseWake(); render(true); });
+  $('#sound').addEventListener('click',e=>{ soundOn=!soundOn; e.currentTarget.setAttribute('aria-pressed',soundOn); e.currentTarget.textContent= soundOn?'Som ligado':'Som desligado'; if(soundOn) beep(1); });
+  $('#full').addEventListener('click',()=>{ const el=$('#console'); try{ if(document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen().catch(()=>toast('Tela cheia indisponível aqui')); }catch(e){ toast('Tela cheia indisponível aqui'); } });
+  render(true);
+
+  /* ---------- INTEL TIMELINE ---------- */
+  const ST=[
+    {k:'open', l:'A definir', c:C.steel},
+    {k:'done', l:'Cumprido', c:C.go},
+    {k:'part', l:'Parcial', c:C.amber},
+    {k:'miss', l:'Não cumprido', c:C.signal}
+  ];
+  const MK=[
+    {id:'s13', m:'JUL', d:'jul', t:'Sprint 13 nas três frentes', x:'Ciclo de entregas de Portabilidade de Crédito, Dados Abertos e Transacionais e Pagamentos (detentor e ITP).', f:['Portabilidade','Dados','Pagamentos']},
+    {id:'s14', m:'AGO', d:'05/08', t:'Sprint 14 e revisão dos quadros', x:'Quadros das três frentes consolidados para acompanhamento do trimestre.', f:['Portabilidade','Dados','Pagamentos']},
+    {id:'ux23', m:'AGO', d:'28/08', t:'Guia de UX v23.00 publicado', x:'Novos requisitos para ITP e IR em Pix Agendado, Pix Automático e Transferências Inteligentes via hybrid flow e JSR. CPC passa a se chamar Crédito Pessoal sem Consignação. Monitoramento começa 60 dias após a publicação.', f:['Pagamentos','UX']},
+    {id:'pcm', m:'SET', d:'01/09', t:'PCM release 2026C em produção', x:'Novos valores de dropReason e descarte definitivo dos reportes da API de Pagamentos v4.0.1. Prazo de adaptação até 06/10.', f:['Pagamentos','Métricas']},
+    {id:'sd', m:'SET', d:'08/09', t:'Service Desk com categoria de desconformidade', x:'Planos de adequação vencidos sem autodeclaração ficam presos em uma categoria própria até a resolução.', f:['Governança']},
+    {id:'jsr', m:'SET', d:'11/09', t:'Marco 100% da API Vínculo de Dispositivo v2.3.0', x:'Certificação obrigatória da Jornada sem Redirecionamento no motor de conformidade v2.3.0.', f:['Pagamentos','JSR']},
+    {id:'cred', m:'SET', d:'14/09', t:'Marco 100% de Crédito Pessoal sem Consignação', x:'Motores rc.1 de Crédito Pessoal sem Consignação v1.1.0 e Empréstimos v2.7.0, rumo ao go-live obrigatório de 03/11.', f:['Portabilidade','Crédito']},
+    {id:'ret', m:'SET', d:'15/09', t:'Base do protótipo de Retenção Open Finance', x:'Protótipo navegável da jornada de retenção montado a partir do Figma.', f:['Retenção','UX']},
+    {id:'ciba', m:'SET', d:'22/09', t:'Marco A1 do CIBA', x:'Motor de conformidade da API Consentimento v3.3.1 para o compartilhamento desacoplado de dados.', f:['Dados','CIBA']},
+    {id:'conv', m:'SET', d:'30/09', t:'Taxa de conversão de consentimento 100% via PCM', x:'A partir do fechamento de setembro, as taxas e metas dos maiores conglomerados passam a ser calculadas só pela PCM.', f:['Dados','Métricas']}
+  ];
+  const status=store.get('status',{});
+  const tl=$('#timeline'); let curM='';
+  MK.forEach(mk=>{
+    if(mk.m!==curM){ curM=mk.m; const h=document.createElement('div'); h.className='month'; h.textContent={JUL:'JULHO',AGO:'AGOSTO',SET:'SETEMBRO'}[mk.m]; tl.appendChild(h); }
+    const row=document.createElement('div'); row.className='mk';
+    row.innerHTML='<div class="d"></div><div><div class="t"></div><div class="x"></div><div class="fr"></div></div>';
+    row.querySelector('.d').textContent=mk.d; row.querySelector('.t').textContent=mk.t; row.querySelector('.x').textContent=mk.x;
+    row.querySelector('.fr').innerHTML=mk.f.map(f=>'<span class="chip">'+f+'</span>').join('');
+    const b=document.createElement('button'); b.type='button'; b.className='status';
+    const paint=()=>{ const s=ST.find(z=>z.k===(status[mk.id]||'open')); b.textContent=s.l; row.style.setProperty('--st',s.c); b.style.setProperty('--st',s.c); b.setAttribute('aria-label','Status de '+mk.t+': '+s.l+'. Clique para mudar.'); };
+    b.addEventListener('click',()=>{ const k=ST.findIndex(z=>z.k===(status[mk.id]||'open')); status[mk.id]=ST[(k+1)%ST.length].k; store.set('status',status); paint(); tally(); });
+    paint(); row.appendChild(b); tl.appendChild(row);
+  });
+  function tally(){
+    const n={open:0,done:0,part:0,miss:0}; MK.forEach(m=>n[status[m.id]||'open']++);
+    $('#tally').innerHTML=['done','part','miss','open'].map(k=>{ const s=ST.find(z=>z.k===k); return '<i style="width:'+(n[k]/MK.length*100)+'%;background:'+(k==='open'?'#2A425E':s.c)+'"></i>'; }).join('');
+    $('#legend').innerHTML=['done','part','miss','open'].map(k=>{ const s=ST.find(z=>z.k===k); return '<span><i style="background:'+(k==='open'?'#2A425E':s.c)+'"></i>'+s.l+' · '+n[k]+'</span>'; }).join('');
+  }
+  tally();
+
+  /* ---------- MEDAL ---------- */
+  let noms=store.get('noms',[]);
+  const nlist=$('#nlist');
+  function drawNoms(){
+    store.set('noms',noms);
+    if(!noms.length){ nlist.innerHTML='<li class="empty" style="display:block">Nenhum indicado ainda. Adicione os nomes das menções honrosas do Relato de Campo, ou carregue um exemplo para ensaiar a revelação.</li>'; return; }
+    nlist.innerHTML='';
+    noms.forEach((n,i)=>{
+      const li=document.createElement('li');
+      li.innerHTML='<span class="nm"></span><button type="button" aria-label="Remover voto">−</button><span class="v"></span><button type="button" aria-label="Adicionar voto">+</button><button type="button" class="del" aria-label="Remover indicado">✕</button>';
+      li.querySelector('.nm').textContent=n.name; li.querySelector('.v').textContent=n.v;
+      const [minus,plus,del]=li.querySelectorAll('button');
+      minus.addEventListener('click',()=>{ n.v=Math.max(0,n.v-1); drawNoms(); });
+      plus.addEventListener('click',()=>{ n.v++; drawNoms(); });
+      del.addEventListener('click',()=>{ noms.splice(i,1); drawNoms(); });
+      nlist.appendChild(li);
+    });
+  }
+  $('#addForm').addEventListener('submit',e=>{ e.preventDefault(); const v=$('#nomInput').value.trim(); if(!v) return; noms.push({name:v,v:0}); $('#nomInput').value=''; drawNoms(); });
+  $('#sample').addEventListener('click',()=>{ noms=[{name:'Exemplo · VÍBORA',v:4},{name:'Exemplo · FALCÃO',v:3},{name:'Exemplo · ÂNCORA',v:2}]; drawNoms(); toast('Exemplo carregado para ensaio'); });
+  $('#clearN').addEventListener('click',()=>{ noms=[]; drawNoms(); $('#winner').textContent='Aguardando votação'; });
+  drawNoms();
+
+  const sp=$('#sparks'), sx=sp.getContext('2d'); let parts=[];
+  function burst(){
+    if(reduced) return;
+    const r=sp.getBoundingClientRect(); sp.width=r.width*devicePixelRatio; sp.height=r.height*devicePixelRatio;
+    const cx=sp.width/2, cy=sp.height*0.3;
+    for(let i=0;i<170;i++){ const a=Math.random()*Math.PI*2, s=(2+Math.random()*7)*devicePixelRatio;
+      parts.push({x:cx,y:cy,vx:Math.cos(a)*s,vy:Math.sin(a)*s-3*devicePixelRatio,l:1,c:Math.random()<.75?C.brass:C.sand,w:(2+Math.random()*3)*devicePixelRatio}); }
+    requestAnimationFrame(stepSparks);
+  }
+  function stepSparks(){
+    sx.clearRect(0,0,sp.width,sp.height);
+    parts.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=0.18*devicePixelRatio; p.vx*=.985; p.l-=.011; sx.globalAlpha=Math.max(0,p.l); sx.fillStyle=p.c; sx.fillRect(p.x,p.y,p.w,p.w*2.2); });
+    parts=parts.filter(p=>p.l>0); sx.globalAlpha=1;
+    if(parts.length) requestAnimationFrame(stepSparks);
+  }
+  $('#reveal').addEventListener('click',()=>{
+    if(!noms.length){ toast('Adicione os indicados primeiro'); return; }
+    const top=Math.max(...noms.map(n=>n.v));
+    if(top===0){ toast('Lance os votos antes de revelar'); return; }
+    const winners=noms.filter(n=>n.v===top);
+    const coin=$('#coin'), cnt=$('#count'), w=$('#winner');
+    coin.hidden=true; w.textContent=''; cnt.hidden=false;
+    let k=3; cnt.textContent=k; beep(1);
+    const iv=setInterval(()=>{
+      k--;
+      if(k>0){ cnt.textContent=k; beep(1); return; }
+      clearInterval(iv); cnt.hidden=true; coin.hidden=false; coin.classList.remove('spin'); void coin.offsetWidth; coin.classList.add('spin');
+      if(winners.length>1){ w.textContent='Empate: '+winners.map(n=>n.name).join(' · '); toast('Segundo turno de 60 s entre os empatados'); beep(2); }
+      else { w.textContent=winners[0].name; beep(4); burst(); }
+    }, reduced?400:900);
+  });
+
+  /* ---------- KIT CHECKLIST ---------- */
+  const CK=[
+    ['Criar o board','Nome sugerido: “Operação Tridente · AAR 3T26 · Squad Delta”. Fundo do board em azul-marinho escuro.'],
+    ['Importar os 7 frames','Arraste os PNGs de miro-kit/frames, um por frame 16:9, na ordem 00 a 06. Trave cada imagem (Lock).'],
+    ['Colar os cards de marco','Copie a coluna de texto de marcos-3t26.csv e cole no Frame 02: cada linha vira um post-it.'],
+    ['Definir cores de post-it','Verde vitórias, vermelho fogo inimigo, azul aprendizados, amarelo menção honrosa.'],
+    ['Esconder frames futuros','Oculte os frames 03 a 06 e revele um por fase para manter o suspense.'],
+    ['Gravar o Talktrack','Briefing de 2 minutos no Frame 00 para quem não puder chegar no horário.'],
+    ['Testar Timer, Modo privado e Votação','Um ensaio de 3 minutos sozinho no board evita surpresas ao vivo.'],
+    ['Comprar e separar o vale','R$ 200 com o vencedor escolhendo a loja. Combine a entrega até 48 h após a sessão.']
+  ];
+  const ckState=store.get('checks',{});
+  $('#checks').innerHTML=CK.map((c,i)=>'<li><label><input type="checkbox" id="ck'+i+'"'+(ckState[i]?' checked':'')+'><div><b></b><span></span></div></label></li>').join('');
+  [...$('#checks').children].forEach((li,i)=>{ li.querySelector('b').textContent=CK[i][0]; li.querySelector('span').textContent=CK[i][1];
+    li.querySelector('input').addEventListener('change',e=>{ ckState[i]=e.target.checked; store.set('checks',ckState); }); });
+
+  /* ---------- INVITE ---------- */
+  $('#copyInv').addEventListener('click',()=>{
+    const txt=$('#invText').textContent;
+    const fallback=()=>{ const r=document.createRange(); r.selectNodeContents($('#invText')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); toast('Texto selecionado. Use Ctrl+C'); };
+    try{ navigator.clipboard.writeText(txt).then(()=>toast('Convocação copiada'), fallback); }catch(e){ fallback(); }
+  });
+})();
+</script>

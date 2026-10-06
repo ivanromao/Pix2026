@@ -1,0 +1,19 @@
+Perguntas para destravar a escrita silenciosa (Frame 03). Leia em voz alta só se o time travar.
+
+ALVOS NEUTRALIZADOS (verde)
+- Qual marco regulatório do 3T passamos de primeira?
+- Que entrega você teria orgulho de mostrar para outro squad?
+- Quem destravou algo que parecia impossível?
+
+FOGO INIMIGO (vermelho)
+- Onde fomos surpreendidos por uma mudança de especificação (Guia UX v23, PCM 2026C, motores de conformidade)?
+- Qual dependência externa nos segurou mais tempo do que deveria?
+- O que deixamos para a última semana antes de um marco?
+
+INTELIGÊNCIA COLETADA (azul)
+- O que os motores de conformidade nos ensinaram sobre a nossa forma de testar?
+- O que sabemos hoje sobre o 4T (go-live de crédito em 03/11, Pix 7.4) que não sabíamos em julho?
+- Que acordo de time funcionou e precisa continuar?
+
+MENÇÃO HONROSA (amarelo)
+- "[Nome] porque [o que fez] e isso permitiu [resultado]."
